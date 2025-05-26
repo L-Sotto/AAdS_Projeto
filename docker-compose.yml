@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  user_service:
+  backend:
     build:
-      context: ./user_service
+      context: ./backend
     ports:
       - "6000:6000"
     networks:

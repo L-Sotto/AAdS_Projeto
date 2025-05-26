@@ -1,9 +1,0 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  creationTimestamp: null
-  labels:
-    apps: user-service
-  name: user-service
-
-#inacabado i actually have no idea what's going on :(

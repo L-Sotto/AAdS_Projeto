@@ -2,11 +2,12 @@ FROM python
 
 WORKDIR /app
 
-COPY main.py .
+#COPY main.py .
+COPY . /app
 
 #RUN pip install flask
 RUN pip install -r requirements.txt
 
-CMD ["python", "main.py"]
+CMD ["python", "app.py"]
 
-EXPOSE 5000
+EXPOSE 6000
