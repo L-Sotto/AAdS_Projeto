@@ -46,9 +46,24 @@ def obter_videos():
         app.logger.error(f"Erro ao obter o video: {e}")
         return jsonify({'error': 'Erro interno do servidor'}), 500
     
+#listavideos
+def serializar_video(video):
+    video['_id'] = str(video['_id'])
+    return video
+
+@app.route('/api/video', methods=['GET'])
+def listar_videos():
+    try:
+        videos = list(videos_collection.find())
+        return jsonify([serializar_video(v) for v in videos])
+    except Exception as e:
+        app.logger.error(f"Erro ao listar vídeos: {e}")
+        return jsonify({'error': 'Erro interno do servidor'}), 500
+
+
 
 #pesquisar video por ID.
-@app.route('api/video/<id>', method=['GET'])
+@app.route('api/video/<id>', methods=['GET'])
 def obter_video_id(id):
     try:
         video = videos_collection.find_one({'_id': ObjectId(id)})
@@ -73,7 +88,24 @@ def apagar_video(id):
 
 
 #editar video
+@app.route('api/video/<id>', methods=['PUT'])
+def editar_video(id):
+    try:
+        data = request.get_json()
+        atualizar = {
+            'titulo': data['titulo'],
+            'descricao': data['descricao'],
+            'duracao': data['duracao'],
+            'url': data['url']
+        }
 
+        resul = videos_collection.update_one({'_id': ObjectId(id)}, {'$set': atualizar})
+        if resul.matched_count == 0:
+            return jsonify({'error': 'Video nao encontrado'}), 404
+        return jsonify({'message': 'Video atualizado com sucesso'})
+    except Exception as e:
+        app.logger.error(f"Erro ao editar o video: {e}")
+        return jsonify({'error': 'Erro interno no servidor'}), 500    
 
 
 @app.route('/health', methods=['GET'])

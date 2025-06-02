@@ -29,14 +29,78 @@
 
 
     <script>
+    //     async function renderVideos() {
+    //   const videos = await fetchVideos();
+    //   const tbody = document.getElementById("video-list");
+    //   tbody.innerHTML = "";
+
+    //   videos.forEach(video => {
+    //     const row = document.createElement("tr");
+    //     row.innerHTML = `
+    //       <td>${video.titulo}</td>
+    //       <td>${video.descricao}</td>
+    //       <td>${video.duracao}</td>
+    //       <td class="actions">
+    //         <button class="edit-btn" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
+    //         <button class="delete-btn" onclick='removerVideo("${video._id}")'>Eliminar</button>
+    //       </td>
+    //     `;
+    //     tbody.appendChild(row);
+    //   });
+    // }
+
+    
         function adicionarVideo(){
             const titulo = prompt("Titulo: ");
             const descricao = prompt("Descrcao: ");
             const duracao = prompt("Duracao (mm:ss): ");
             if (titulo && descricao && duracao){
-                video
+                try{
+                    fetch('http://localhost:6000/api/video',{method: 'POST', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({ titulo, descricao, duracao, url })});
+                    rendervideos();
+                } catch (error) {
+          console.error("Erro ao adicionar video:", error);
+                }
             }
         }
+
+
+
+    //     async function editarVideo(id, video) {
+    //   const titulo = prompt("Novo título:", video.titulo);
+    //   const descricao = prompt("Nova descrição:", video.descricao);
+    //   const duracao = prompt("Nova duração:", video.duracao);
+    //   const url = prompt("Novo URL:", video.url);
+    //   if (titulo && descricao && duracao && url) {
+    //     try {
+    //       await fetch(`${apiBase}/${id}`, {
+    //         method: 'PUT',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ titulo, descricao, duracao, url })
+    //       });
+    //       renderVideos();
+    //     } catch (error) {
+    //       console.error("Erro ao editar vídeo:", error);
+    //     }
+    //   }
+    // }
+
+    // async function removerVideo(id) {
+    //   if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
+    //     try {
+    //       await fetch(`${apiBase}/${id}`, { method: 'DELETE' });
+    //       renderVideos();
+    //     } catch (error) {
+    //       console.error("Erro ao eliminar vídeo:", error);
+    //     }
+    //   }
+    // }
+
+    // renderVideos();
+
+
+
+
     </script>
 
 
