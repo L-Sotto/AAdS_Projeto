@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styleadmin.css">
+    
     <title>Painel Administrativo</title>
 </head>
 <body>
@@ -13,7 +13,32 @@
             <button class="adicionar-video-botao" onclick="adicionarVideo()">+ Adicionar Video</button>
         </div>
     </div>
+    <div>
+        <table>
+      <thead>
+        <tr>
+          <th>Titulo</th>
+          <th>Descricao</th>
+          <th>Duracao</th>
+          <th>Acoes</th>
+        </tr>
+      </thead>
+      <tbody id="listaVideos"></tbody>
+    </table>
+    </div>
+
+
+    <script>
+        function adicionarVideo(){
+            const titulo = prompt("Titulo: ");
+            const descricao = prompt("Descrcao: ");
+            const duracao = prompt("Duracao (mm:ss): ");
+            if (titulo && descricao && duracao){
+                video
+            }
+        }
+    </script>
+
+
 </body>
-
-
 </html>
