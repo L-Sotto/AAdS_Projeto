@@ -15,6 +15,7 @@ body{
     min-height: 100vh;
     background-size: cover;
     background-attachment: fixed;
+    background-color: #f2f8fc;
 }
 
 header {
@@ -29,7 +30,7 @@ header {
     z-index: 99;
 }
 .logo{
-    height: 70px;
+    height: 50px;
     width: auto;
     object-fit: contain;
     display: flex;
@@ -39,12 +40,12 @@ header {
 .logo_container {
     display: flex;
     align-items: center;
-    gap: .1px;
+    gap: 1px;
 }
 .logo_texto {
     font-family: "Nunito Sans", sans-serif;
     font-weight: 800;
-    font-size: 3rem;
+    font-size: 35px;
     letter-spacing: -1.5px;
     color: #164599;
 }
@@ -56,4 +57,48 @@ header {
     text-decoration: none;
     font-weight: 500;
     margin-left: 40px;
+}
+
+.barraPesquisa {
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: 14px;
+    border-radius: 28px;
+    background: #f2f8fc;
+}
+
+.barraPesquisa {
+    display: flex;
+    align-items: center;
+    background: #f2f8fc;
+    padding: 10px 15px;
+    border-radius: 30px;
+    border: 2px solid #ccccccd7;
+    width: 450px;
+}
+.barraPesquisa .material-symbols-outlined {
+    color: #164599;
+    margin-right: 10px;
+}
+.pesquisaInput {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1rem;
+    font-family: 'Lexend', sans-serif;
+    width: 200px;
+    color: #333333;
+    margin-left: 14px;
+}
+.pesquisaInput::placeholder{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.pesquisaForm {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    padding-right: 275px;
 }
