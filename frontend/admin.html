@@ -30,7 +30,7 @@
 
     <script>
     //     async function renderVideos() {
-    //   const videos = await fetchVideos();
+    //   const videos = await fetch();
     //   const tbody = document.getElementById("video-list");
     //   tbody.innerHTML = "";
 
@@ -48,7 +48,10 @@
     //     tbody.appendChild(row);
     //   });
     // }
-
+        function obterVideos(){
+            const videos = fetch('http://127.0.0.1:6000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
+            
+        }
     
         function adicionarVideo(){
             const titulo = prompt("Titulo: ");

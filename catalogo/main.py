@@ -55,7 +55,7 @@ def serializar_video(video):
 def listar_videos():
     try:
         videos = list(videos_collection.find())
-        return jsonify([serializar_video(v) for v in videos])
+        return jsonify(str(v['_id']) for v in videos)
     except Exception as e:
         app.logger.error(f"Erro ao listar vídeos: {e}")
         return jsonify({'error': 'Erro interno do servidor'}), 500
