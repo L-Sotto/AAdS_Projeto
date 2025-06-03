@@ -49,8 +49,23 @@
     //   });
     // }
         function obterVideos(){
-            const videos = fetch('http://127.0.0.1:6000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
-            
+            const videosFetch = fetch('http://127.0.0.1:6000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
+            const videos = videosFetch.json();
+            const listarVideos = document.getElementById("listaVideos");
+            listarVideos.innerHTML ="";
+            videosFetch.forEach(video => {
+                const linha = document.createElement("tr");
+                linha.innerHTML= `
+                    <td>${video.titulo}</td>
+                    <td>${video.descricao}</td>
+                    <td>${video.duracao}</td>
+                    <td class = "acao">
+                        <button class="botaoEditar" onClick="editarVideo("${video._id}", ${JSON.stringify(video)})">Editar</button>
+                        <button class="botaoEliminar" onClick="eliminarVideo("${video._id}")">Eliminar</button> 
+                    </td>
+                `;
+                tbody.appendChild(row);     
+            });
         }
     
         function adicionarVideo(){
