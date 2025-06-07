@@ -5,16 +5,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>Painel Administrativo</title>
+
+    <style>
+        * {
+        box-sizing: border-box;
+        font-family: "Nunito Sans", sans-serif;
+        margin: 0;
+        padding: 0;
+        }
+        body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f2f8fc;
+        }
+        .header {
+        background-color: #333;
+        color: #f2f8fc;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+        .header h1 {
+        font-size: 24px;
+        }
+        .adicionar-video-botao {
+        background-color: #164599;
+        color: #f2f8fc;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        font-size: 14px;
+        }
+        .adicionar-video-botao:hover {
+        background-color: #164699d5;
+        }
+        table {
+        width: 90%;
+        margin: 30px auto;
+        border-collapse: collapse;
+        background-color: #f2f8fc;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        overflow-x: auto;
+        }
+        table thead th {
+        background-color: #f2f8fc;
+        color: #333;
+        font-weight: 600;
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 2px solid #f2f8fc;
+        }
+        table tbody td {
+        padding: 12px 15px;
+        color: #555;
+        border-bottom: 1px solid #eee;
+        }
+        table tbody tr:nth-child(odd) {
+        background-color: #f2f8fc;
+        }
+        table tbody tr:nth-child(even) {
+        background-color: #f2f8fc;
+        }
+        table tbody tr:hover {
+        background-color: #f2f8fc;
+        cursor: pointer;
+        }
+        .acao {
+        text-align: right;
+        }
+        .botaoEditar {
+        background-color: #3d95dd;
+        color: #f2f8fc;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        margin-right: 8px;
+        transition: background-color 0.2s;
+        }
+        .botaoEditar:hover {
+        background-color: #1976d2;
+        }
+        .botaoEliminar {
+        background-color: #e74c3c;
+        color: #f2f8fc;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        transition: background-color 0.2s;
+        }
+        .botaoEliminar:hover {
+        background-color: #c0392b;
+        }
+        @media (max-width: 600px) {
+        table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        table thead, table tbody, table th, table td, table tr {
+            display: block;
+        }
+        table thead tr {
+            background-color: #f2f8fc;
+        }
+        table thead th {
+            width: 150px;
+            display: inline-block;
+        }
+        table tbody tr {
+            margin-bottom: 10px;
+        }
+        table tbody td {
+            display: inline-block;
+            width: 150px;
+        }
+        }
+
+        
+        .inputPopup {
+        display: none;               /* começa escondido */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;               /* fica acima do conteúdo */
+        justify-content: center;
+        align-items: center;
+        }
+
+        .icon-close {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 24px;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.2s;
+        }
+
+        .icon-close:hover {
+        color: #000;
+        }
+
+        /* A caixa do formulário em si */
+        .form-boxupload {
+        background-color: #f2f8fc;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        width: 90%;
+        max-width: 500px;
+        position: relative;
+        }
+
+        /* Título do modal */
+        .form-boxupload h2 {
+        margin-bottom: 15px;
+        color: #333;
+        font-size: 20px;
+        }
+
+        /* Estilo para cada label + input */
+        .form-boxupload label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 500;
+        color: #333;
+        font-size: 14px;
+        }
+        .form-boxupload input[type="text"],
+        .form-boxupload input[type="url"] {
+        width: 100%;
+        padding: 10px 12px;
+        margin-top: 5px;
+        border: 1px solid #2d313451;
+        border-radius: 4px;
+        font-size: 14px;
+        }
+
+        /* Container dos botões no modal */
+        /* .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+        } */
+
+        /* Botão “Upload” dentro do modal */
+        .botaoUpload {
+        background-color: #4caf50;
+        color: #f2f8fc;
+        border: none;
+        padding: 10px 18px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        }
+        .botaoUpload:hover {
+        background-color: #45a049;
+        }
+
+        /* Botão “Cancelar” dentro do modal */
+        /* .btn-cancel {
+        background-color: #bbb;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-right: 10px;
+        transition: background-color 0.2s;
+        }
+        .btn-cancel:hover {
+        background-color: #999;
+        } */
+    </style>
 </head>
 <body>
-    <div class="dash" id="dashboard">
+    <div class="header">
         <div class="videos">
             <h1>Gestao de videos</h1>
-            <button class="adicionar-video-botao" onclick="adicionarVideo()">+ Adicionar Video</button>
+            <button class="adicionar-video-botao" onclick="mostrarPopup()">+ Adicionar Video</button>
         </div>
-    </div>
+        
     <div>
-        <table>
+    <table>
       <thead>
         <tr>
           <th>Titulo</th>
@@ -26,100 +250,263 @@
       <tbody id="listaVideos"></tbody>
     </table>
     </div>
+    
+    <div id = "uploadPopup" class="inputPopup">
+        
+        
+        <div class="form-boxupload">
+            <span class="icon-close" onclick="noPopup()"><ion-icon name="close"></ion-icon></span>
+            <h2>upload</h2>
+            
+            <div class="input-box">
+                <!-- <span class="icon"><ion-icon name="person"></ion-icon></span> -->
+                <label>Titulo de Video: </label>
+                <input type="text" id="inputTitulo" required>
+            </div>
+            
+            <div class="input-box">
+                <!-- <span class="icon"><ion-icon name="lock-closed"></ion-icon></span> -->
+                <input type="text" id = "inputDescricao"required>
+                <label>descricao</label>
+            </div>
+            <!-- <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                <input type="time" required>
+                <label>duracao</label>
+            </div> -->
+
+            <div class="input-box">
+                <label class="inputmp4">Video (MP4)</label>
+                <input type="file" id="inputFile" accept="video/mp4" required>
+            </div>
+
+            <!-- <div class="input-box">
+                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                <input type="url" required>
+                <label>url</label>
+            </div> -->
+            <button class="botaoUpload" onclick="adicionarVideo()">upload</button>
+        
+        </div>
+    </div>
 
 
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
-    //     async function renderVideos() {
-    //   const videos = await fetch();
-    //   const tbody = document.getElementById("video-list");
-    //   tbody.innerHTML = "";
 
-    //   videos.forEach(video => {
-    //     const row = document.createElement("tr");
-    //     row.innerHTML = `
-    //       <td>${video.titulo}</td>
-    //       <td>${video.descricao}</td>
-    //       <td>${video.duracao}</td>
-    //       <td class="actions">
-    //         <button class="edit-btn" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
-    //         <button class="delete-btn" onclick='removerVideo("${video._id}")'>Eliminar</button>
-    //       </td>
-    //     `;
-    //     tbody.appendChild(row);
-    //   });
-    // }
-        function obterVideos(){
-            const videosFetch = fetch('http://127.0.0.1:6000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
-            const videos = videosFetch.json();
-            const listarVideos = document.getElementById("listaVideos");
-            listarVideos.innerHTML ="";
-            videosFetch.forEach(video => {
+        // const wrapper = document.querySelector('.wrapper');
+        // const loginlink = document.querySelector('.login-link');
+        // const buttonpopup = document.querySelector('.loginbutton');
+        // const iconclose = document.querySelector('.icon-close');
+
+        // loginlink.addEventListener('click', ()=>{
+        //     wrapper.classList.remove('active');
+        // });
+
+        // buttonpopup.addEventListener('click', ()=>{
+        //     wrapper.classList.add('active-popup');
+        // });
+
+        // iconclose.addEventListener('click', ()=>{
+        //     wrapper.classList.remove('active-popup');
+        // });
+        // async function obterVideos(){
+        //     const videosFetch = await fetch('http://127.0.0.1:5000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
+        //     if (!videosFetch.ok) {
+        //         console.error('Falha ao obter vídeos. Status:', resposta.status);
+        //         return;
+        //     }
+            
+        //     const videos = await videosFetch.json();
+        //     const listarVideos = document.getElementById("listaVideos");
+        //     listarVideos.innerHTML ="";
+            
+        //     videos.forEach(video => {
+        //         const linha = document.createElement("tr");
+        //         linha.innerHTML= `
+        //             <td>${video.titulo}</td>
+        //             <td>${video.descricao}</td>
+        //             <td>${video.duracao}</td>
+        //             <td class = "acao">
+        //                 <button class="botaoEditar" onClick="editarVideo("${video._id}", ${JSON.stringify(video)})">Editar</button>
+        //                 <button class="botaoEliminar" onClick="eliminarVideo("${video._id}")">Eliminar</button> 
+        //             </td>
+        //         `;
+        //         tbody.appendChild(linha);     
+        //     });
+        // }
+
+        // obterVideos();
+
+        async function obterVideos() {
+            try {
+                
+                const resposta = await fetch('http://127.0.0.1:5000/api/video', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+                });
+                if (!resposta.ok) {
+                console.error('Falha ao obter vídeos. Status:', resposta.status);
+                return;
+                }
+                const videos = await resposta.json();
+                const listarVideos = document.getElementById("listaVideos");
+                listarVideos.innerHTML = "";
+
+                videos.forEach(video => {
                 const linha = document.createElement("tr");
-                linha.innerHTML= `
+                linha.innerHTML = `
                     <td>${video.titulo}</td>
                     <td>${video.descricao}</td>
                     <td>${video.duracao}</td>
-                    <td class = "acao">
-                        <button class="botaoEditar" onClick="editarVideo("${video._id}", ${JSON.stringify(video)})">Editar</button>
-                        <button class="botaoEliminar" onClick="eliminarVideo("${video._id}")">Eliminar</button> 
+                    
+                    <td class="acao">
+                        <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
+                        <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>Eliminar</button>
                     </td>
                 `;
-                tbody.appendChild(row);     
-            });
+                listarVideos.appendChild(linha);
+                });
+            } catch (err) {
+                console.error('Erro de rede ou JSON parsing:', err);
+            }
+            }
+
+            
+            obterVideos();
+        
+        function mostrarPopup() {
+            document.getElementById("uploadPopup").style.display = "flex";
         }
-    
-        function adicionarVideo(){
-            const titulo = prompt("Titulo: ");
-            const descricao = prompt("Descrcao: ");
-            const duracao = prompt("Duracao (mm:ss): ");
-            if (titulo && descricao && duracao){
-                try{
-                    fetch('http://localhost:6000/api/video',{method: 'POST', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({ titulo, descricao, duracao, url })});
-                    rendervideos();
-                } catch (error) {
-          console.error("Erro ao adicionar video:", error);
+        function noPopup() {
+            document.getElementById("uploadPopup").style.display = "none";
+            limpaPopup();
+        }
+        function limpaPopup() {
+            document.getElementById("inputTitulo").value = "";
+            document.getElementById("inputDescricao").value = "";
+            document.getElementById("inputFile").value ="";
+            // document.getElementById("inputDuracao").value = "";
+            // document.getElementById("inputURL").value = "";
+        }
+
+
+
+
+        async function adicionarVideo() {
+            const titulo = document.getElementById("inputTitulo").value.trim();
+            const descricao = document.getElementById("inputDescricao").value.trim();
+            // const duracao = document.getElementById("inputDuracao").value.trim();
+            // const url = document.getElementById("inputUrl").value.trim();
+            const video = document.getElementById("inputFile").files[0];
+            
+            if (!titulo || !descricao || !video) {
+                alert("Todos os campos são obrigatórios!");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('titulo', titulo);
+            formData.append('descricao', descricao);
+            formData.append('videofile', video);
+            try {
+                const resposta = await fetch('http://127.0.0.1:5000/api/video', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: formData
+                })
+                if(!resposta.ok){
+                    console.error("Statos do POST: ", resposta.status);
+                    const erro = await resposta.text();
+                    alert("Nao foi possivel adicionar video. ")
+                    return;
                 }
+                console.log("Video adicionado")
+                noPopup();
+                obterVideos();
+            } catch (error) {
+                console.error("Erro ao iniciar fetch de adição:", error);
             }
         }
 
 
+        // function editarVideo(id, video){
+        //     const titulo = prompt("Novo titulo: ", video.titulo);
+        //     const descricao = prompt("Nova descrição:", video.descricao);
+        //     // const duracao = prompt("Nova duração:", video.duracao);
+        //     // const url = prompt("Novo URL:", video.url);
+        //     if(titulo && descricao){
+        //         try {
+        //                 fetch(`http://127.0.0.1:5000/api/video/${id}`, {
+        //                 method: 'PUT',
+        //                 headers: { 'Content-Type': 'application/json' },
+        //                 body: JSON.stringify({ titulo, descricao})
+        //             });
+        //             obterVideos();
+        //             } catch (error) {
+        //             console.error("Erro ao editar vídeo:", error);
+        //         }
+        //     }
+        // }
 
-    //     async function editarVideo(id, video) {
-    //   const titulo = prompt("Novo título:", video.titulo);
-    //   const descricao = prompt("Nova descrição:", video.descricao);
-    //   const duracao = prompt("Nova duração:", video.duracao);
-    //   const url = prompt("Novo URL:", video.url);
-    //   if (titulo && descricao && duracao && url) {
-    //     try {
-    //       await fetch(`${apiBase}/${id}`, {
-    //         method: 'PUT',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({ titulo, descricao, duracao, url })
-    //       });
-    //       renderVideos();
-    //     } catch (error) {
-    //       console.error("Erro ao editar vídeo:", error);
-    //     }
-    //   }
-    // }
+        async function editarVideo(id, dados){
+            let titulo = prompt("Novo titulo: ", dados.titulo || "")
+            if (titulo === null || titulo.trim() === ""){
+                titulo = dados.titulo;
 
-    // async function removerVideo(id) {
-    //   if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
-    //     try {
-    //       await fetch(`${apiBase}/${id}`, { method: 'DELETE' });
-    //       renderVideos();
-    //     } catch (error) {
-    //       console.error("Erro ao eliminar vídeo:", error);
-    //     }
-    //   }
-    // }
+            }
+            let descricao = prompt("Nova descricao: ", dados.descricao || "")
+            if (descricao === null || descricao.trim() === ""){
+                descricao = dados.descricao;
+            }
 
-    // renderVideos();
+            try{
+                const dadosNovos ={
+                    titulo: titulo,
+                    descricao: descricao,
+                    duracao: dados.duracao,
+                    url: dados.url
+                };
+                const resposta = await fetch(`http://127.0.0.1:5000/api/video/${id}`, {
+                    method: 'PUT', 
+                    headers:{'Content-Type':'application/json'}, 
+                    body: JSON.stringify(dadosNovos)});
+                if(!resposta.ok){
+                    console.error("Falha a editar. Erro:", resposta.status);
+                    alert("Não foi possivel editar o video!")
+                    return;
+                }
+                console.log("video editado com sucesso.", resposta.json());
+                obterVideos();
+            }
+            catch (erro) {
+                console.error("Erro no PUT /api/video/:id:", erro);
+                alert("Ocorreu um erro ao atualizar o vídeo.");
+            }
+        }
+
+
+        function removerVideo(id) {
+        if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
+            try {
+                fetch(`http://127.0.0.1:5000/api/video/${id}`, { method: 'DELETE' });
+                obterVideos();
+            } catch (error) {
+            console.error("Erro ao eliminar vídeo:", error);
+            }
+        }
+        }
+
+        obterVideos();
 
 
 
 
     </script>
+
+
+    
+
 
 
 </body>
