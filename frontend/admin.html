@@ -235,6 +235,7 @@
         <div class="videos">
             <h1>Gestao de videos</h1>
             <button class="adicionar-video-botao" onclick="mostrarPopup()">+ Adicionar Video</button>
+            
         </div>
         
     <div>
@@ -342,7 +343,7 @@
         async function obterVideos() {
             try {
                 
-                const resposta = await fetch('http://127.0.0.1:5000/api/video', {
+                const resposta = await fetch('http://127.0.0.1:6000/api/video', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
                 });
@@ -410,7 +411,7 @@
             formData.append('descricao', descricao);
             formData.append('videofile', video);
             try {
-                const resposta = await fetch('http://127.0.0.1:5000/api/video', {
+                const resposta = await fetch('http://127.0.0.1:6000/api/video', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: formData
@@ -467,7 +468,7 @@
                     duracao: dados.duracao,
                     url: dados.url
                 };
-                const resposta = await fetch(`http://127.0.0.1:5000/api/video/${id}`, {
+                const resposta = await fetch(`http://127.0.0.1:6000/api/video/${id}`, {
                     method: 'PUT', 
                     headers:{'Content-Type':'application/json'}, 
                     body: JSON.stringify(dadosNovos)});
@@ -489,7 +490,7 @@
         function removerVideo(id) {
         if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
             try {
-                fetch(`http://127.0.0.1:5000/api/video/${id}`, { method: 'DELETE' });
+                fetch(`http://127.0.0.1:6000/api/video/${id}`, { method: 'DELETE' });
                 obterVideos();
             } catch (error) {
             console.error("Erro ao eliminar vídeo:", error);

@@ -9,6 +9,6 @@ COPY main.py .
 #RUN pip install -r requirements.txt
 RUN pip install flask flask-cors pymongo
 
-CMD ["python", "app.py"]
+CMD ["python", "main.py"]
 
 EXPOSE 7000
