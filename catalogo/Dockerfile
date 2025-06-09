@@ -11,4 +11,4 @@ RUN pip install flask flask-cors pymongo pymediainfo
 
 CMD ["python", "main.py"]
 
-EXPOSE 6000
+EXPOSE 5000

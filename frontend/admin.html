@@ -340,43 +340,91 @@
 
         // obterVideos();
 
-        async function obterVideos() {
-            try {
+        // function obterVideos() {
+        //     try {
                 
-                const resposta = await fetch('http://127.0.0.1:6000/api/video', {
+        //         const resposta = fetch('http://127.0.0.1:5000/api/video', {
+        //         method: 'GET',
+        //         headers: { 'Content-Type': 'application/json' }
+        //         });
+        //         if (!resposta.ok) {
+        //         console.error('Falha ao obter vídeos. Status:', resposta.status);
+        //         return;
+        //         }
+        //         const videos = resposta.json();
+        //         const listarVideos = document.getElementById("listaVideos");
+        //         listarVideos.innerHTML = "";
+
+        //         videos.forEach(video => {
+        //         const linha = document.createElement("tr");
+        //         linha.innerHTML = `
+        //             <td>${video.titulo}</td>
+        //             <td>${video.descricao}</td>
+        //             <td>${video.duracao}</td>
+                    
+        //             <td class="acao">
+        //                 <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
+        //                 <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>Eliminar</button>
+        //             </td>
+        //         `;
+        //         listarVideos.appendChild(linha);
+        //         });
+        //     } catch (err) {
+        //         console.error('Erro de rede ou JSON parsing:', err);
+        //     }
+        //     }
+
+            
+        //     obterVideos();
+        
+
+        function obterVideos() {
+            fetch('http://127.0.0.1:5000/api/video', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
-                });
-                if (!resposta.ok) {
-                console.error('Falha ao obter vídeos. Status:', resposta.status);
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                console.error('Falha ao obter vídeos. Status:', response.status);
+                // interrompe a cadeia retornando undefined
                 return;
                 }
-                const videos = await resposta.json();
+                return response.json();
+            })
+            .then(function(videos) {
+                // se o response.ok foi false, vídeos será undefined
+                if (!videos) return;
+
                 const listarVideos = document.getElementById("listaVideos");
                 listarVideos.innerHTML = "";
 
-                videos.forEach(video => {
+                videos.forEach(function(video) {
                 const linha = document.createElement("tr");
                 linha.innerHTML = `
                     <td>${video.titulo}</td>
                     <td>${video.descricao}</td>
                     <td>${video.duracao}</td>
-                    
                     <td class="acao">
-                        <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
-                        <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>Eliminar</button>
+                    <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>
+                        Editar
+                    </button>
+                    <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>
+                        Eliminar
+                    </button>
                     </td>
                 `;
                 listarVideos.appendChild(linha);
                 });
-            } catch (err) {
+            })
+            .catch(function(err) {
                 console.error('Erro de rede ou JSON parsing:', err);
-            }
+            });
             }
 
-            
+            // chama a função para popular a tabela na carga da página
             obterVideos();
-        
+
+
         function mostrarPopup() {
             document.getElementById("uploadPopup").style.display = "flex";
         }
@@ -388,48 +436,86 @@
             document.getElementById("inputTitulo").value = "";
             document.getElementById("inputDescricao").value = "";
             document.getElementById("inputFile").value ="";
-            // document.getElementById("inputDuracao").value = "";
-            // document.getElementById("inputURL").value = "";
+            
         }
 
 
 
 
-        async function adicionarVideo() {
-            const titulo = document.getElementById("inputTitulo").value.trim();
-            const descricao = document.getElementById("inputDescricao").value.trim();
-            // const duracao = document.getElementById("inputDuracao").value.trim();
-            // const url = document.getElementById("inputUrl").value.trim();
-            const video = document.getElementById("inputFile").files[0];
+        // function adicionarVideo() {
+        //     const titulo = document.getElementById("inputTitulo").value.trim();
+        //     const descricao = document.getElementById("inputDescricao").value.trim();
+        //     const video = document.getElementById("inputFile").files[0];
             
+        //     if (!titulo || !descricao || !video) {
+        //         alert("Todos os campos são obrigatórios!");
+        //         return;
+        //     }
+        //     const formData = new FormData();
+        //     formData.append('titulo', titulo);
+        //     formData.append('descricao', descricao);
+        //     formData.append('videofile', video);
+        //     try {
+        //         const resposta = fetch('http://127.0.0.1:5000/api/video', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: formData
+        //         })
+        //         if(!resposta.ok){
+        //             console.error("Statos do POST: ", resposta.status);
+        //             const erro = resposta.text();
+        //             alert("Nao foi possivel adicionar video. ")
+        //             return;
+        //         }
+        //         console.log("Video adicionado")
+        //         noPopup();
+        //         obterVideos();
+        //     } catch (error) {
+        //         console.error("Erro ao iniciar fetch de adição:", error);
+        //     }
+        // }
+
+
+
+        function adicionarVideo() {
+            const titulo    = document.getElementById("inputTitulo").value.trim();
+            const descricao = document.getElementById("inputDescricao").value.trim();
+            const video     = document.getElementById("inputFile").files[0];
+
             if (!titulo || !descricao || !video) {
                 alert("Todos os campos são obrigatórios!");
                 return;
             }
+
             const formData = new FormData();
             formData.append('titulo', titulo);
             formData.append('descricao', descricao);
             formData.append('videofile', video);
-            try {
-                const resposta = await fetch('http://127.0.0.1:6000/api/video', {
+
+            fetch('http://127.0.0.1:5000/api/video', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: formData
-                })
-                if(!resposta.ok){
-                    console.error("Statos do POST: ", resposta.status);
-                    const erro = await resposta.text();
-                    alert("Nao foi possivel adicionar video. ")
-                    return;
+                body: formData      // <-- não definas Content-Type, o browser monta o multipart
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                // lê o corpo de erro e pára a cadeia
+                return response.text().then(function(text) {
+                    console.error("Status do POST:", response.status);
+                    alert("Não foi possível adicionar vídeo: " + text);
+                    throw new Error("HTTP " + response.status);
+                });
                 }
-                console.log("Video adicionado")
+                return response.json();
+            })
+            .then(function(data) {
+                console.log("Vídeo adicionado:", data);
                 noPopup();
                 obterVideos();
-            } catch (error) {
-                console.error("Erro ao iniciar fetch de adição:", error);
+            })
+            .catch(function(err) {
+                console.error("Erro ao adicionar vídeo:", err);
+            });
             }
-        }
-
 
         // function editarVideo(id, video){
         //     const titulo = prompt("Novo titulo: ", video.titulo);
@@ -468,7 +554,7 @@
                     duracao: dados.duracao,
                     url: dados.url
                 };
-                const resposta = await fetch(`http://127.0.0.1:6000/api/video/${id}`, {
+                const resposta = await fetch(`http://127.0.0.1:5000/api/video/${id}`, {
                     method: 'PUT', 
                     headers:{'Content-Type':'application/json'}, 
                     body: JSON.stringify(dadosNovos)});
@@ -490,7 +576,7 @@
         function removerVideo(id) {
         if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
             try {
-                fetch(`http://127.0.0.1:6000/api/video/${id}`, { method: 'DELETE' });
+                fetch(`http://127.0.0.1:5000/api/video/${id}`, { method: 'DELETE' });
                 obterVideos();
             } catch (error) {
             console.error("Erro ao eliminar vídeo:", error);
