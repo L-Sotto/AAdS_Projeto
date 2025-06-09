@@ -234,7 +234,7 @@
     <div class="header">
         <div class="videos">
             <h1>Gestao de videos</h1>
-            <button class="adicionar-video-botao" onclick="mostrarPopup()">+ Adicionar Video</button>
+            <button class="adicionar-video-botao" onclick="mostrarPopup()"> Adicionar Video </button>
             
         </div>
         
@@ -256,38 +256,30 @@
         
         
         <div class="form-boxupload">
+            <form id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="adicionarVideo(event)">
             <span class="icon-close" onclick="noPopup()"><ion-icon name="close"></ion-icon></span>
             <h2>upload</h2>
             
             <div class="input-box">
-                <!-- <span class="icon"><ion-icon name="person"></ion-icon></span> -->
+                
                 <label>Titulo de Video: </label>
                 <input type="text" id="inputTitulo" required>
             </div>
             
             <div class="input-box">
-                <!-- <span class="icon"><ion-icon name="lock-closed"></ion-icon></span> -->
+                
                 <input type="text" id = "inputDescricao"required>
                 <label>descricao</label>
             </div>
-            <!-- <div class="input-box">
-                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                <input type="time" required>
-                <label>duracao</label>
-            </div> -->
 
             <div class="input-box">
                 <label class="inputmp4">Video (MP4)</label>
                 <input type="file" id="inputFile" accept="video/mp4" required>
             </div>
 
-            <!-- <div class="input-box">
-                <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
-                <input type="url" required>
-                <label>url</label>
-            </div> -->
             <button class="botaoUpload" onclick="adicionarVideo()">upload</button>
-        
+            </form>
+            <div id="messageupload"></div>
         </div>
     </div>
 
@@ -380,8 +372,7 @@
 
         function obterVideos() {
             fetch('http://127.0.0.1:5000/api/video', {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
+                method: 'GET'
             })
             .then(function(response) {
                 if (!response.ok) {
@@ -476,44 +467,38 @@
         // }
 
 
+        
+        function adicionarVideo(event) {
+            event.preventDefault(); // bloqueia o submit padrão do form
 
-        function adicionarVideo() {
-            const titulo    = document.getElementById("inputTitulo").value.trim();
-            const descricao = document.getElementById("inputDescricao").value.trim();
-            const video     = document.getElementById("inputFile").files[0];
+            const form = document.getElementById("uploadForm");
+            const formData = new FormData(form);
+            const messageDiv = document.getElementById("messageupload");
 
-            if (!titulo || !descricao || !video) {
-                alert("Todos os campos são obrigatórios!");
-                return;
-            }
-
-            const formData = new FormData();
-            formData.append('titulo', titulo);
-            formData.append('descricao', descricao);
-            formData.append('videofile', video);
-
-            fetch('http://127.0.0.1:5000/api/video', {
-                method: 'POST',
-                body: formData      // <-- não definas Content-Type, o browser monta o multipart
+            fetch("http://127.0.0.1:5000/api/video", {
+                method: "POST",
+                body: formData
             })
-            .then(function(response) {
+            .then(response => {
                 if (!response.ok) {
-                // lê o corpo de erro e pára a cadeia
-                return response.text().then(function(text) {
-                    console.error("Status do POST:", response.status);
-                    alert("Não foi possível adicionar vídeo: " + text);
-                    throw new Error("HTTP " + response.status);
+                return response.json().then(err => {
+                    throw err; // dispara pro .catch
                 });
                 }
                 return response.json();
             })
-            .then(function(data) {
-                console.log("Vídeo adicionado:", data);
-                noPopup();
+            .then(data => {
+                // data é o JSON de sucesso
+                messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
+                form.reset();
                 obterVideos();
+                noPopup();
             })
-            .catch(function(err) {
-                console.error("Erro ao adicionar vídeo:", err);
+            .catch(err => {
+                // err pode ser a resposta JSON ou um Error de rede
+                const msg = err.message || JSON.stringify(err);
+                messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
+                console.error("Erro no upload:", err);
             });
             }
 
