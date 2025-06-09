@@ -256,8 +256,9 @@
         
         
         <div class="form-boxupload">
-            <form id="uploadForm" method="POST" enctype="multipart/form-data" onsubmit="adicionarVideo(event)">
             <span class="icon-close" onclick="noPopup()"><ion-icon name="close"></ion-icon></span>
+            <form id="uploadForm" onsubmit="adicionarVideo(event)">
+            
             <h2>upload</h2>
             
             <div class="input-box">
@@ -277,7 +278,7 @@
                 <input type="file" id="inputFile" accept="video/mp4" required>
             </div>
 
-            <button class="botaoUpload" onclick="adicionarVideo()">upload</button>
+            <button class="botaoUpload" onclick="adicionarVideo(event)">upload</button>
             </form>
             <div id="messageupload"></div>
         </div>
@@ -370,48 +371,77 @@
         //     obterVideos();
         
 
+        // function obterVideos() {
+        //     fetch('http://127.0.0.1:5000/api/video', {
+        //         method: 'GET'
+        //     })
+        //     .then(function(response) {
+        //         if (!response.ok) {
+        //         console.error('Falha ao obter vídeos. Status:', response.status);
+        //         // interrompe a cadeia retornando undefined
+        //         return;
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(function(videos) {
+        //         // se o response.ok foi false, vídeos será undefined
+        //         if (!videos) return;
+
+        //         const listarVideos = document.getElementById("listaVideos");
+        //         listarVideos.innerHTML = "";
+
+        //         videos.forEach(function(video) {
+        //         const linha = document.createElement("tr");
+        //         linha.innerHTML = `
+        //             <td>${video.titulo}</td>
+        //             <td>${video.descricao}</td>
+        //             <td>${video.duracao}</td>
+        //             <td class="acao">
+        //             <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>
+        //                 Editar
+        //             </button>
+        //             <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>
+        //                 Eliminar
+        //             </button>
+        //             </td>
+        //         `;
+        //         listarVideos.appendChild(linha);
+        //         });
+        //     })
+        //     .catch(function(err) {
+        //         console.error('Erro de rede ou JSON parsing:', err);
+        //     });
+        //     }
         function obterVideos() {
             fetch('http://127.0.0.1:5000/api/video', {
                 method: 'GET'
             })
-            .then(function(response) {
+            .then(response => {
                 if (!response.ok) {
                 console.error('Falha ao obter vídeos. Status:', response.status);
-                // interrompe a cadeia retornando undefined
-                return;
+                throw new Error('HTTP ' + response.status);
                 }
                 return response.json();
             })
-            .then(function(videos) {
-                // se o response.ok foi false, vídeos será undefined
-                if (!videos) return;
+            .then(videos => {
+                const tbody = document.getElementById('listaVideos');
+                tbody.innerHTML = '';
 
-                const listarVideos = document.getElementById("listaVideos");
-                listarVideos.innerHTML = "";
-
-                videos.forEach(function(video) {
-                const linha = document.createElement("tr");
-                linha.innerHTML = `
-                    <td>${video.titulo}</td>
-                    <td>${video.descricao}</td>
-                    <td>${video.duracao}</td>
-                    <td class="acao">
-                    <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>
-                        Editar
-                    </button>
-                    <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>
-                        Eliminar
-                    </button>
-                    </td>
+                videos.forEach(video => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>${video.titulo}</td>
+                <td>${video.descricao}</td>
+                <td>${video.duracao}</td>
                 `;
-                listarVideos.appendChild(linha);
+                tbody.appendChild(tr);
                 });
             })
-            .catch(function(err) {
-                console.error('Erro de rede ou JSON parsing:', err);
+            .catch(error => {
+                console.error('Erro ao listar vídeos:', error);
+                alert('Não foi possível carregar a lista de vídeos.');
             });
             }
-
             // chama a função para popular a tabela na carga da página
             obterVideos();
 
@@ -469,15 +499,17 @@
 
         
         function adicionarVideo(event) {
-            //event.preventDefault(); // bloqueia o submit padrão do form
+            event.preventDefault(); // bloqueia o submit padrão do form
 
             const form = document.getElementById("uploadForm");
-            const formData = new FormData(form);
+            //const formData = new FormData(form);
+            const data = Object.fromEntries(new FormData(form));
             const messageDiv = document.getElementById("messageupload");
 
             fetch("http://127.0.0.1:5000/api/video", {
                 method: "POST",
-                body: formData
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
             })
             .then(response => {
                 if (!response.ok) {
@@ -521,7 +553,7 @@
         //     }
         // }
 
-        async function editarVideo(id, dados){
+        function editarVideo(id, dados){
             let titulo = prompt("Novo titulo: ", dados.titulo || "")
             if (titulo === null || titulo.trim() === ""){
                 titulo = dados.titulo;
@@ -539,7 +571,7 @@
                     duracao: dados.duracao,
                     url: dados.url
                 };
-                const resposta = await fetch(`http://127.0.0.1:5000/api/video/${id}`, {
+                const resposta = fetch(`http://127.0.0.1:5000/api/video/${id}`, {
                     method: 'PUT', 
                     headers:{'Content-Type':'application/json'}, 
                     body: JSON.stringify(dadosNovos)});
