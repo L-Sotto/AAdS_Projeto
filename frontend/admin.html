@@ -238,18 +238,18 @@
             <div class="input-box">
                 
                 <label>Titulo de Video: </label>
-                <input type="text" id="titulo" required>
+                <input type="text" id="titulo" name="titulo" required>
             </div>
             
             <div class="input-box">
                 
-                <input type="text" id = "descricao"required>
+                <input type="text" id = "descricao" name="descricao" required>
                 <label>descricao</label>
             </div>
 
             <div class="input-box">
                 <label class="inputmp4">Video (MP4)</label>
-                <input type="file" id="videofile" accept="video/mp4" required>
+                <input type="file" id="videofile" name="videofile" accept="video/mp4" required>
             </div>
 
             <button class="botaoUpload" onclick="adicionarVideo(event)">upload</button>
@@ -425,7 +425,7 @@
             event.preventDefault();
 
             const form = document.getElementById("uploadForm");
-            const formData = new FormData();
+            const formData = new FormData(form);
 
             fetch("http://127.0.0.1:5000/api/videos", {
                 method: "POST",
