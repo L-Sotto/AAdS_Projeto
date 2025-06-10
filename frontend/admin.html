@@ -1,535 +1,365 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Painel Administrativo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Administrativo</title>
+  <style>
+    /* reset básico */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Nunito Sans", sans-serif;
+    }
+    body {
+      min-height: 100vh;
+      background: #f2f8fc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-    <style>
-        * {
-        box-sizing: border-box;
-        font-family: "Nunito Sans", sans-serif;
-        margin: 0;
-        padding: 0;
-        }
-        body {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        background-color: #f2f8fc;
-        }
-        .header {
-        background-color: #333;
-        color: #f2f8fc;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        }
-        .header h1 {
-        font-size: 24px;
-        }
-        .adicionar-video-botao {
-        background-color: #164599;
-        color: #f2f8fc;
-        border: none;
-        padding: 10px 15px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 14px;
-        }
-        .adicionar-video-botao:hover {
-        background-color: #164699d5;
-        }
-        table {
-        width: 90%;
-        margin: 30px auto;
-        border-collapse: collapse;
-        background-color: #f2f8fc;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        font-size: 14px;
-        overflow-x: auto;
-        }
-        table thead th {
-        background-color: #f2f8fc;
-        color: #333;
-        font-weight: 600;
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 2px solid #f2f8fc;
-        }
-        table tbody td {
-        padding: 12px 15px;
-        color: #555;
-        border-bottom: 1px solid #eee;
-        }
-        table tbody tr:nth-child(odd) {
-        background-color: #f2f8fc;
-        }
-        table tbody tr:nth-child(even) {
-        background-color: #f2f8fc;
-        }
-        table tbody tr:hover {
-        background-color: #f2f8fc;
-        cursor: pointer;
-        }
-        .acao {
-        text-align: right;
-        }
-        .botaoEditar {
-        background-color: #3d95dd;
-        color: #f2f8fc;
-        border: none;
-        padding: 6px 10px;
-        border-radius: 4px;
-        font-size: 13px;
-        margin-right: 8px;
-        transition: background-color 0.2s;
-        }
-        .botaoEditar:hover {
-        background-color: #1976d2;
-        }
-        .botaoEliminar {
-        background-color: #e74c3c;
-        color: #f2f8fc;
-        border: none;
-        padding: 6px 10px;
-        border-radius: 4px;
-        font-size: 13px;
-        transition: background-color 0.2s;
-        }
-        .botaoEliminar:hover {
-        background-color: #c0392b;
-        }
-        @media (max-width: 600px) {
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        table thead, table tbody, table th, table td, table tr {
-            display: block;
-        }
-        table thead tr {
-            background-color: #f2f8fc;
-        }
-        table thead th {
-            width: 150px;
-            display: inline-block;
-        }
-        table tbody tr {
-            margin-bottom: 10px;
-        }
-        table tbody td {
-            display: inline-block;
-            width: 150px;
-        }
-        }
+    /* cabeçalho escuro */
+    .header {
+      width: 100%;
+      background: #333;
+      color: #f2f8fc;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      font-size: 24px;
+    }
+    .adicionar-video-botao {
+      background: #164599;
+      color: #f2f8fc;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .adicionar-video-botao:hover {
+      background: #164699d5;
+    }
 
-        
-        .inputPopup {
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;             
-        justify-content: center;
-        align-items: center;
-        }
+    /* área branca logo abaixo do header */
+    .content {
+      background: #fff;
+      width: 90%;
+      max-width: 960px;
+      margin-top: 0;       /* colado ao header */
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
 
-        .icon-close {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-        font-size: 24px;
-        color: #555;
-        cursor: pointer;
-        transition: color 0.2s;
-        }
+    /* tabela */
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+    .content thead th {
+      background: #f2f8fc;
+      color: #333;
+      font-weight: 600;
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 2px solid #f2f8fc;
+    }
+    .content tbody td {
+      padding: 12px 15px;
+      color: #555;
+      border-bottom: 1px solid #eee;
+    }
+    .content tbody tr:nth-child(odd),
+    .content tbody tr:nth-child(even) {
+      background: #f2f8fc;
+    }
+    .content tbody tr:hover {
+      background: #e6eff7;
+      cursor: pointer;
+    }
 
-        .icon-close:hover {
-        color: #000;
-        }
+    /* coluna de ações */
+    .acao {
+      text-align: right;
+    }
+    .botaoEditar,
+    .botaoEliminar {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #f2f8fc;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .botaoEditar {
+      background: #3d95dd;
+      margin-right: 8px;
+    }
+    .botaoEditar:hover {
+      background: #1976d2;
+    }
+    .botaoEliminar {
+      background: #e74c3c;
+    }
+    .botaoEliminar:hover {
+      background: #c0392b;
+    }
 
-        .form-boxupload {
-        background-color: #f2f8fc;
-        padding: 20px 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        width: 90%;
-        max-width: 500px;
-        position: relative;
-        }
+    /* popup (inicialmente oculto) */
+    .inputPopup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .inputPopup.active {
+      display: flex;
+    }
+    .form-boxupload {
+      background: #f2f8fc;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+    .form-boxupload h2 {
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 20px;
+    }
+    .form-boxupload label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+    .form-boxupload input[type="text"],
+    .form-boxupload input[type="file"] {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 5px;
+      border: 1px solid #2d313451;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .icon-close {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 24px;
+      color: #555;
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .icon-close:hover {
+      color: #000;
+    }
+    .botaoUpload {
+      margin-top: 15px;
+      background: #4caf50;
+      color: #f2f8fc;
+      border: none;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .botaoUpload:hover {
+      background: #45a049;
+    }
 
-        .form-boxupload h2 {
-        margin-bottom: 15px;
-        color: #333;
-        font-size: 20px;
-        }
-
-        .form-boxupload label {
+    /* responsividade */
+    @media (max-width: 600px) {
+      .content table {
         display: block;
-        margin-top: 10px;
-        font-weight: 500;
-        color: #333;
-        font-size: 14px;
-        }
-        .form-boxupload input[type="text"],
-        .form-boxupload input[type="url"] {
-        width: 100%;
-        padding: 10px 12px;
-        margin-top: 5px;
-        border: 1px solid #2d313451;
-        border-radius: 4px;
-        font-size: 14px;
-        }
-
-        .botaoUpload {
-        background-color: #4caf50;
-        color: #f2f8fc;
-        border: none;
-        padding: 10px 18px;
-        font-size: 14px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        }
-        .botaoUpload:hover {
-        background-color: #45a049;
-        }
-
-    </style>
+        white-space: nowrap;
+      }
+      .content thead, .content tbody,
+      .content th, .content td, .content tr {
+        display: block;
+      }
+      .content thead th {
+        width: 150px;
+        display: inline-block;
+      }
+      .content tbody td {
+        display: inline-block;
+        width: 150px;
+      }
+      .content tbody tr {
+        margin-bottom: 10px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="videos">
-            <h1>Gestao de videos</h1>
-            <!-- <button class="adicionar-video-botao" onclick="mostrarPopup()"> Adicionar Video </button> -->
-            
-        </div>
-        
-    <div>
+
+  <header class="header">
+    <h1>Gestão de vídeos</h1>
+    <button class="adicionar-video-botao" onclick="mostrarPopup()">
+      Adicionar Vídeo
+    </button>
+  </header>
+
+  <main class="content">
     <table>
       <thead>
         <tr>
-          <th>Titulo</th>
-          <th>Descricao</th>
-          <th>Duracao</th>
-          <th>Acoes</th>
+          <th>Título</th>
+          <th>Descrição</th>
+          <th>Duração</th>
+          <th class="acao">Ações</th>
         </tr>
       </thead>
-      <tbody id="listaVideos"></tbody>
+      <tbody id="listaVideos">
+        <!-- linhas inseridas via JavaScript -->
+      </tbody>
     </table>
+  </main>
+
+  <div id="uploadPopup" class="inputPopup">
+    <div class="form-boxupload">
+      <span class="icon-close" onclick="noPopup()">
+        <ion-icon name="close"></ion-icon>
+      </span>
+      <form id="uploadForm" onsubmit="adicionarVideo(event)">
+        <h2>Upload de Vídeo</h2>
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo" required>
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" required>
+        <label for="videofile">Vídeo (MP4):</label>
+        <input type="file" id="videofile" name="videofile" accept="video/mp4" required>
+        <button class="botaoUpload" type="submit">Enviar</button>
+      </form>
+      <div id="messageupload"></div>
     </div>
-    
-    <div id = "uploadPopup" class="inputPopup">
-        
-        
-        <div class="form-boxupload">
-            <span class="icon-close" onclick="noPopup()"><ion-icon name="close"></ion-icon></span>
-            <form id="uploadForm">
-            
-            <h2>upload</h2>
-            
-            <div class="input-box">
-                
-                <label>Titulo de Video: </label>
-                <input type="text" id="titulo" name="titulo" required>
-            </div>
-            
-            <div class="input-box">
-                
-                <input type="text" id = "descricao" name="descricao" required>
-                <label>descricao</label>
-            </div>
+  </div>
 
-            <div class="input-box">
-                <label class="inputmp4">Video (MP4)</label>
-                <input type="file" id="videofile" name="videofile" accept="video/mp4" required>
-            </div>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script>
+    function mostrarPopup() {
+      document.getElementById('uploadPopup').classList.add('active');
+    }
+    function noPopup() {
+      document.getElementById('uploadPopup').classList.remove('active');
+    }
 
-            <button class="botaoUpload" onclick="adicionarVideo(event)">upload</button>
-            </form>
-            <div id="messageupload"></div>
-        </div>
-    </div>
+    function obterVideos() {
+      fetch('http://127.0.0.1:5000/api/videos', { method: 'GET' })
+        .then(res => {
+          if (!res.ok) throw new Error('Status ' + res.status);
+          return res.json();
+        })
+        .then(videos => {
+          const tbody = document.getElementById('listaVideos');
+          tbody.innerHTML = '';
+          videos.forEach(video => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${video.titulo}</td>
+              <td>${video.descricao}</td>
+              <td>${video.duracao}</td>
+              <td class="acao">
+                <button class="botaoEditar"
+                  onclick="editarVideo('${video._id}', ${JSON.stringify(video)})">
+                  Editar
+                </button>
+                <button class="botaoEliminar"
+                  onclick="removerVideo('${video._id}')">
+                  Eliminar
+                </button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(err => {
+          console.error('Erro ao listar vídeos:', err);
+          alert('Não foi possível carregar a lista de vídeos.');
+        });
+    }
 
-
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-
-        // async function obterVideos(){
-        //     const videosFetch = await fetch('http://127.0.0.1:5000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
-        //     if (!videosFetch.ok) {
-        //         console.error('Falha ao obter vídeos. Status:', resposta.status);
-        //         return;
-        //     }
-            
-        //     const videos = await videosFetch.json();
-        //     const listarVideos = document.getElementById("listaVideos");
-        //     listarVideos.innerHTML ="";
-            
-        //     videos.forEach(video => {
-        //         const linha = document.createElement("tr");
-        //         linha.innerHTML= `
-        //             <td>${video.titulo}</td>
-        //             <td>${video.descricao}</td>
-        //             <td>${video.duracao}</td>
-        //             <td class = "acao">
-        //                 <button class="botaoEditar" onClick="editarVideo("${video._id}", ${JSON.stringify(video)})">Editar</button>
-        //                 <button class="botaoEliminar" onClick="eliminarVideo("${video._id}")">Eliminar</button> 
-        //             </td>
-        //         `;
-        //         tbody.appendChild(linha);     
-        //     });
-        // }
-
-        // obterVideos();
-
-        // function obterVideos() {
-        //     try {
-                
-        //         const resposta = fetch('http://127.0.0.1:5000/api/video', {
-        //         method: 'GET',
-        //         headers: { 'Content-Type': 'application/json' }
-        //         });
-        //         if (!resposta.ok) {
-        //         console.error('Falha ao obter vídeos. Status:', resposta.status);
-        //         return;
-        //         }
-        //         const videos = resposta.json();
-        //         const listarVideos = document.getElementById("listaVideos");
-        //         listarVideos.innerHTML = "";
-
-        //         videos.forEach(video => {
-        //         const linha = document.createElement("tr");
-        //         linha.innerHTML = `
-        //             <td>${video.titulo}</td>
-        //             <td>${video.descricao}</td>
-        //             <td>${video.duracao}</td>
-                    
-        //             <td class="acao">
-        //                 <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>Editar</button>
-        //                 <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>Eliminar</button>
-        //             </td>
-        //         `;
-        //         listarVideos.appendChild(linha);
-        //         });
-        //     } catch (err) {
-        //         console.error('Erro de rede ou JSON parsing:', err);
-        //     }
-        //     }
-
-            
-        //     obterVideos();
-        
-
-        // function obterVideos() {
-        //     fetch('http://127.0.0.1:5000/api/video', {
-        //         method: 'GET'
-        //     })
-        //     .then(function(response) {
-        //         if (!response.ok) {
-        //         console.error('Falha ao obter vídeos. Status:', response.status);
-        //         // interrompe a cadeia retornando undefined
-        //         return;
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(function(videos) {
-        //         // se o response.ok foi false, vídeos será undefined
-        //         if (!videos) return;
-
-        //         const listarVideos = document.getElementById("listaVideos");
-        //         listarVideos.innerHTML = "";
-
-        //         videos.forEach(function(video) {
-        //         const linha = document.createElement("tr");
-        //         linha.innerHTML = `
-        //             <td>${video.titulo}</td>
-        //             <td>${video.descricao}</td>
-        //             <td>${video.duracao}</td>
-        //             <td class="acao">
-        //             <button class="botaoEditar" onclick='editarVideo("${video._id}", ${JSON.stringify(video)})'>
-        //                 Editar
-        //             </button>
-        //             <button class="botaoEliminar" onclick='removerVideo("${video._id}")'>
-        //                 Eliminar
-        //             </button>
-        //             </td>
-        //         `;
-        //         listarVideos.appendChild(linha);
-        //         });
-        //     })
-        //     .catch(function(err) {
-        //         console.error('Erro de rede ou JSON parsing:', err);
-        //     });
-        //     }
-        function obterVideos() {
-            fetch('http://127.0.0.1:5000/api/videos', {
-                method: 'GET'
-            })
-            .then(response => {
-                if (!response.ok) {
-                console.error('Falha ao obter vídeos. Status:', response.status);
-                throw new Error('HTTP ' + response.status);
-                }
-                return response.json();
-            })
-            .then(videos => {
-                const tbody = document.getElementById('listaVideos');
-                tbody.innerHTML = '';
-
-                videos.forEach(video => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                <td>${video.titulo}</td>
-                <td>${video.descricao}</td>
-                <td>${video.duracao}</td>
-                `;
-                tbody.appendChild(tr);
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao listar vídeos:', error);
-                alert('Não foi possível carregar a lista de vídeos.');
-            });
-            }
-            // chama a função para popular a tabela na carga da página
+    function adicionarVideo(e) {
+      e.preventDefault();
+      const formData = new FormData(document.getElementById('uploadForm'));
+      fetch('http://127.0.0.1:5000/api/videos', {
+        method: 'POST',
+        body: formData
+      })
+        .then(res => res.json())
+        .then(data => {
+          const msg = document.getElementById('messageupload');
+          if (data.status === 'error') {
+            msg.innerHTML = `<p style="color:red">${data.message}</p>`;
+          } else {
+            msg.innerHTML = `<p style="color:green">Upload realizado com sucesso!</p>`;
+            document.getElementById('uploadForm').reset();
+            noPopup();
             obterVideos();
+          }
+        })
+        .catch(err => {
+          console.error('Erro no upload:', err);
+          document.getElementById('messageupload')
+            .innerHTML = `<p style="color:red">Erro no upload. ${err}</p>`;
+        });
+    }
 
+    function editarVideo(id, dados) {
+      const novoTitulo = prompt('Novo título:', dados.titulo) || dados.titulo;
+      const novaDesc  = prompt('Nova descrição:', dados.descricao) || dados.descricao;
+      fetch(`http://127.0.0.1:5000/api/videos/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          titulo: novoTitulo,
+          descricao: novaDesc,
+          duracao: dados.duracao,
+          url: dados.url
+        })
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Status ' + res.status);
+          return res.json();
+        })
+        .then(() => obterVideos())
+        .catch(err => {
+          console.error('Erro ao editar:', err);
+          alert('Não foi possível editar o vídeo.');
+        });
+    }
 
-        // function mostrarPopup() {
-        //     document.getElementById("uploadPopup").style.display = "flex";
-        // }
-        // function noPopup() {
-        //     document.getElementById("uploadPopup").style.display = "none";
-        //     limpaPopup();
-        // }
-        // function limpaPopup() {
-        //     document.getElementById("inputTitulo").value = "";
-        //     document.getElementById("inputDescricao").value = "";
-        //     document.getElementById("inputFile").value ="";
-            
-        // }
+    function removerVideo(id) {
+      if (!confirm('Confirma exclusão deste vídeo?')) return;
+      fetch(`http://127.0.0.1:5000/api/videos/${id}`, { method: 'DELETE' })
+        .then(() => obterVideos())
+        .catch(err => {
+          console.error('Erro ao eliminar:', err);
+          alert('Não foi possível eliminar o vídeo.');
+        });
+    }
 
-
-
-
-        function adicionarVideo(event) {
-            event.preventDefault();
-
-            const form = document.getElementById("uploadForm");
-            const formData = new FormData(form);
-
-            fetch("http://127.0.0.1:5000/api/videos", {
-                method: "POST",
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                const messageDiv = document.getElementById("messageupload");
-                if (data.status && data.status === "error") {
-                    messageDiv.innerHTML = `<p style="color: red;">Erro: ${data.message}</p>`;
-                } else {
-                    messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
-                    form.reset();
-                    // limpaPopup();
-                    // noPopup();
-                    obterVideos();  
-                }
-                console.log("Resposta do servidor:", data);
-            })
-            .catch(error => {
-                console.error("Erro:", error);
-                const messageDiv = document.getElementById("messageupload");
-                messageDiv.innerHTML = `<p style="color: red;">Ocorreu um erro no upload. ${error}.</p>`;
-            });
-        }
-
-        // function editarVideo(id, video){
-        //     const titulo = prompt("Novo titulo: ", video.titulo);
-        //     const descricao = prompt("Nova descrição:", video.descricao);
-        //     // const duracao = prompt("Nova duração:", video.duracao);
-        //     // const url = prompt("Novo URL:", video.url);
-        //     if(titulo && descricao){
-        //         try {
-        //                 fetch(`http://127.0.0.1:5000/api/video/${id}`, {
-        //                 method: 'PUT',
-        //                 headers: { 'Content-Type': 'application/json' },
-        //                 body: JSON.stringify({ titulo, descricao})
-        //             });
-        //             obterVideos();
-        //             } catch (error) {
-        //             console.error("Erro ao editar vídeo:", error);
-        //         }
-        //     }
-        // }
-
-        function editarVideo(id, dados){
-            let titulo = prompt("Novo titulo: ", dados.titulo || "")
-            if (titulo === null || titulo.trim() === ""){
-                titulo = dados.titulo;
-
-            }
-            let descricao = prompt("Nova descricao: ", dados.descricao || "")
-            if (descricao === null || descricao.trim() === ""){
-                descricao = dados.descricao;
-            }
-
-            try{
-                const dadosNovos ={
-                    titulo: titulo,
-                    descricao: descricao,
-                    duracao: dados.duracao,
-                    url: dados.url
-                };
-                const resposta = fetch(`http://127.0.0.1:5000/api/videos/${id}`, {
-                    method: 'PUT', 
-                    headers:{'Content-Type':'application/json'}, 
-                    body: JSON.stringify(dadosNovos)});
-                if(!resposta.ok){
-                    console.error("Falha a editar. Erro:", resposta.status);
-                    alert("Não foi possivel editar o video!")
-                    return;
-                }
-                console.log("video editado com sucesso.", resposta.json());
-                obterVideos();
-            }
-            catch (erro) {
-                console.error("Erro no PUT /api/videos/:id:", erro);
-                alert("Ocorreu um erro ao atualizar o vídeo.");
-            }
-        }
-
-
-        function removerVideo(id) {
-        if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
-            try {
-                fetch(`http://127.0.0.1:5000/api/videos/${id}`, { method: 'DELETE' });
-                obterVideos();
-            } catch (error) {
-            console.error("Erro ao eliminar vídeo:", error);
-            }
-        }
-        }
-
-        obterVideos();
-
-
-
-
-    </script>
-
-
-    
-
-
-
+    // popula a tabela ao carregar a página
+    obterVideos();
+  </script>
 </body>
 </html>
