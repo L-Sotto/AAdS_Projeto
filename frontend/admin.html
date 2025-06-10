@@ -257,7 +257,7 @@
         
         <div class="form-boxupload">
             <span class="icon-close" onclick="noPopup()"><ion-icon name="close"></ion-icon></span>
-            <form id="uploadForm" onsubmit="adicionarVideo(event)">
+            <form id="uploadForm">
             
             <h2>upload</h2>
             
@@ -498,42 +498,71 @@
 
 
         
+        // function adicionarVideo(event) {
+        //     event.preventDefault();
+
+        //     const form = document.getElementById("uploadForm");
+        //     //const formData = new FormData(form);
+        //     const dados = Object.fromEntries(new FormData(form));
+        //     //const messageDiv = document.getElementById("messageupload");
+
+        //     fetch("http://127.0.0.1:5000/api/videos", {
+        //         method: "POST",
+        //         //headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify(dados)
+        //     })
+        //     .then(response => {
+        //         if (!response.ok) {
+        //         return response.json().then(err => {
+        //             throw err; // dispara pro .catch
+        //         });
+        //         }
+        //         return response.json();
+        //     })
+        //     .then(data => {
+        //         // data é o JSON de sucesso
+        //         //messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
+        //         limpaPopup();
+        //         obterVideos();
+        //         noPopup();
+        //     })
+        //     .catch(err => {
+        //         // err pode ser a resposta JSON ou um Error de rede
+        //         const msg = err.message || JSON.stringify(err);
+        //         //messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
+        //         console.error("Erro no upload:", err);
+        //     });
+        //     }
         function adicionarVideo(event) {
-            event.preventDefault();
+            event.preventDefault(); // Previne o envio padrão do formulário
 
             const form = document.getElementById("uploadForm");
-            //const formData = new FormData(form);
-            const data = Object.fromEntries(new FormData(form));
-            //const messageDiv = document.getElementById("messageupload");
+            const formData = new FormData(form);
 
             fetch("http://127.0.0.1:5000/api/videos", {
                 method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
+                body: formData,
             })
-            .then(response => {
-                if (!response.ok) {
-                return response.json().then(err => {
-                    throw err; // dispara pro .catch
-                });
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // data é o JSON de sucesso
-                //messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
-                limpaPopup();
-                obterVideos();
-                noPopup();
+                const messageDiv = document.getElementById("messageupload");
+                if (data.status && data.status === "error") {
+                    messageDiv.innerHTML = <p style="color: red;">Erro: ${data.message}</p>;
+                } else {
+                    messageDiv.innerHTML = <p style="color: green;">Upload realizado com sucesso!</p>;
+                    form.reset(); 
+                    limpaPopup();
+                    noPopup();
+                    obterVideos();  
+                }
+                console.log("Resposta do servidor:", data);
             })
-            .catch(err => {
-                // err pode ser a resposta JSON ou um Error de rede
-                const msg = err.message || JSON.stringify(err);
-                //messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
-                console.error("Erro no upload:", err);
+            .catch(error => {
+                console.error("Erro:", error);
+                const messageDiv = document.getElementById("messageupload");
+                messageDiv.innerHTML = <p style="color: red;">Ocorreu um erro no upload. ${error}.</p>;
             });
-            }
-        
+        }
 
         // function editarVideo(id, video){
         //     const titulo = prompt("Novo titulo: ", video.titulo);
