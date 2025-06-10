@@ -111,11 +111,36 @@
             position: relative;
             padding-right: 275px;
         }
+
+
+        .videos-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        padding: 1rem;
+        }
+        .video-card {
+        flex: 1 1 300px;
+        border: 1px solid #ccc;
+        padding: 0.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .video-card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        }
+        .video-card p {
+        margin-bottom: 0.5rem;
+        color: #555;
+        }
+
     </style>
 
 </head>
 <!-- <span class="material-symbols-outlined">search</span> -->
 <body>
+    
     <header>
         <div class="logo_container">
             <img src="ualflix_logotipo3.png" alt="Logo" class="logo">
@@ -129,6 +154,63 @@
         </form>
         <button onclick="window.location.href='/admin.html';">Entrar em administrador</button>
     </header>
+
+    <main id="videosContainer" class="videos-container"></main>
+
+    <script>
+    // Dispara logo que o DOM estiver pronto
+        document.addEventListener('DOMContentLoaded', obterVideos);
+
+        function obterVideos() {
+        // Faz o fetch ao teu micro-serviço de streaming
+        fetch('http://127.0.0.1:7000/api/videos', {
+            method: 'GET'
+        })
+        .then(res => {
+            if (!res.ok) {
+            throw new Error('Falha ao obter lista de vídeos: ' + res.status);
+            }
+            return res.json();
+        })
+        .then(videos => {
+            const container = document.getElementById('videosContainer');
+            container.innerHTML = ''; // limpa antes de preencher
+
+            videos.forEach(video => {
+            // Cria card
+            const card = document.createElement('div');
+            card.className = 'video-card';
+
+            const titulo = document.createElement('h2');
+            titulo.textContent = video.titulo;
+
+            const descricao = document.createElement('p');
+            descricao.textContent = video.descricao;
+
+            const vid = document.createElement('video');
+            vid.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
+            vid.controls = true;
+            vid.width = 320;
+
+            card.append(titulo, descricao, vid);
+            container.appendChild(card);
+            });
+        })
+        .catch(err => {
+            console.error('Erro ao carregar vídeos:', err);
+            // Opcional: exibires uma mensagem na página
+            const container = document.getElementById('videosContainer');
+            container.innerHTML = `<p style="color:red;">${err.message}</p>`;
+        });
+        }
+    </script>
 </body>
 </html>
+        
 
+
+
+
+
+
+    
