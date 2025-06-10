@@ -413,7 +413,7 @@
         //     });
         //     }
         function obterVideos() {
-            fetch('http://127.0.0.1:5000/api/video', {
+            fetch('http://127.0.0.1:5000/api/videos', {
                 method: 'GET'
             })
             .then(response => {
@@ -506,7 +506,7 @@
             const data = Object.fromEntries(new FormData(form));
             //const messageDiv = document.getElementById("messageupload");
 
-            fetch("http://127.0.0.1:5000/api/video", {
+            fetch("http://127.0.0.1:5000/api/videos", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -572,7 +572,7 @@
                     duracao: dados.duracao,
                     url: dados.url
                 };
-                const resposta = fetch(`http://127.0.0.1:5000/api/video/${id}`, {
+                const resposta = fetch(`http://127.0.0.1:5000/api/videos/${id}`, {
                     method: 'PUT', 
                     headers:{'Content-Type':'application/json'}, 
                     body: JSON.stringify(dadosNovos)});
@@ -585,7 +585,7 @@
                 obterVideos();
             }
             catch (erro) {
-                console.error("Erro no PUT /api/video/:id:", erro);
+                console.error("Erro no PUT /api/videos/:id:", erro);
                 alert("Ocorreu um erro ao atualizar o vídeo.");
             }
         }
@@ -594,7 +594,7 @@
         function removerVideo(id) {
         if (confirm("Tens a certeza que queres eliminar este vídeo?")) {
             try {
-                fetch(`http://127.0.0.1:5000/api/video/${id}`, { method: 'DELETE' });
+                fetch(`http://127.0.0.1:5000/api/videos/${id}`, { method: 'DELETE' });
                 obterVideos();
             } catch (error) {
             console.error("Erro ao eliminar vídeo:", error);

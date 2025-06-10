@@ -15,13 +15,14 @@ try:
     client = MongoClient('mongodb://admin:password123@mongodb:27017/')
     db = client.videos_db
     videos_collection = db.videos
+    fs=GridFS.gridfs(db)
     app.logger.info("Conectado à MongoDB com sucesso")
 except Exception as e:
     app.logger.error(f"Erro ao conectar à MongoDB: {e}")
 
 
 #Adicionar videos
-@app.route('/api/video', methods=['POST'])
+@app.route('/api/videos', methods=['POST'])
 def adicionar_video():
     if videos_collection in None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
@@ -131,7 +132,7 @@ def adicionar_video():
 #         app.logger.error(f"Erro ao obter o video: {e}")
 #         return jsonify({'error': 'Erro interno do servidor'}), 500
 
-@app.route('/api/video', methods=['GET'])
+@app.route('/api/videos', methods=['GET'])
 def obter_videos():
    
     if videos_collection is None:
@@ -181,7 +182,7 @@ def obter_videos():
 
 
 #pesquisar video por ID.
-@app.route('/api/video/<id>', methods=['GET'])
+@app.route('/api/videos/<id>', methods=['GET'])
 def obter_video_id(id):
     try:
         video = videos_collection.find_one({'_id': ObjectId(id)})
@@ -193,7 +194,7 @@ def obter_video_id(id):
         return jsonify({'error': 'Erro interno do servidor'}), 500
 
 #Apagar video
-@app.route('/api/video/<id>', methods=['DELETE'])
+@app.route('/api/videos/<id>', methods=['DELETE'])
 def apagar_video(id):
     try:
         apagado = videos_collection.delete_one({'_id':ObjectId(id)})
@@ -206,7 +207,7 @@ def apagar_video(id):
 
 
 #editar video
-@app.route('/api/video/<id>', methods=['PUT'])
+@app.route('/api/videos/<id>', methods=['PUT'])
 def editar_video(id):
     try:
         data = request.get_json()
