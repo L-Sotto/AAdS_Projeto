@@ -499,12 +499,12 @@
 
         
         function adicionarVideo(event) {
-            event.preventDefault(); // bloqueia o submit padrão do form
+            event.preventDefault();
 
             const form = document.getElementById("uploadForm");
             //const formData = new FormData(form);
             const data = Object.fromEntries(new FormData(form));
-            const messageDiv = document.getElementById("messageupload");
+            //const messageDiv = document.getElementById("messageupload");
 
             fetch("http://127.0.0.1:5000/api/video", {
                 method: "POST",
@@ -521,18 +521,19 @@
             })
             .then(data => {
                 // data é o JSON de sucesso
-                messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
-                form.reset();
+                //messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
+                limpaPopup();
                 obterVideos();
                 noPopup();
             })
             .catch(err => {
                 // err pode ser a resposta JSON ou um Error de rede
                 const msg = err.message || JSON.stringify(err);
-                messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
+                //messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
                 console.error("Erro no upload:", err);
             });
             }
+        
 
         // function editarVideo(id, video){
         //     const titulo = prompt("Novo titulo: ", video.titulo);
