@@ -550,9 +550,9 @@
             .then(data => {
                 const messageDiv = document.getElementById("messageupload");
                 if (data.status && data.status === "error") {
-                    messageDiv.innerHTML = <p style="color: red;">Erro: ${data.message}</p>;
+                    messageDiv.innerHTML = '<p style="color: red;">Erro: ${data.message}</p>';
                 } else {
-                    messageDiv.innerHTML = <p style="color: green;">Upload realizado com sucesso!</p>;
+                    messageDiv.innerHTML = '<p style="color: green;">Upload realizado com sucesso!</p>';
                     form.reset(); 
                     // limpaPopup();
                     // noPopup();
@@ -563,7 +563,7 @@
             .catch(error => {
                 console.error("Erro:", error);
                 const messageDiv = document.getElementById("messageupload");
-                messageDiv.innerHTML = <p style="color: red;">Ocorreu um erro no upload. ${error}.</p>;
+                messageDiv.innerHTML = '<p style="color: red;">Ocorreu um erro no upload. ${error}.</p>';
             });
         }
 
