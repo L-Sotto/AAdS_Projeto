@@ -1,8 +1,3 @@
-# from flask import Flask, request, jsonify
-# from flask_cors import CORS
-
-# app = Flask(__name__)
-# CORS(app)
 from flask import Flask, Response, stream_with_context, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -66,6 +61,6 @@ def stream_video(video_id):
         return jsonify({'error': 'Erro interno ao enviar vídeo'}), 500
 
 if __name__ == "__main__":
-    # Ajuste a porta para 7000 (conforme o Deployment)
+    
     app.run(host="0.0.0.0", port=7000, debug=False)
 
