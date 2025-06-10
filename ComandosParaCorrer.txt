@@ -1,0 +1,40 @@
+minikube start --nodes=3 --driver=docker
+
+kubectl create configmap frontend-html --from-file=./frontend/
+
+kubectl apply -f ualflix-frontend-deployment.yaml
+kubectl apply -f ualflix-frontend-service.yaml
+
+kubectl apply -f ualflix-catalogo-deployment.yaml
+kubectl apply -f ualflix-catalogo-service.yaml
+
+kubectl apply -f ualflix-streaming-deployment.yaml
+kubectl apply -f ualflix-streaming-service.yaml
+
+
+cd streaming
+docker build --no-cache -t ualflix-streaming:v1 .
+minikube image load ualflix-streaming:v1
+cd .. 
+
+cd catalogo
+docker build --no-cache -t ualflix-catalogo:v1 .
+minikube image load ualflix-catalogo:v1
+cd ..
+
+cd frontend
+docker build --no-cache -t ualflix-frontend:v1 .
+minikube image load ualflix-frontend:v1
+cd ..
+
+kubectl create namespace monitorar
+kubectl apply -f mongodb.yaml
+
+------------------------------------------
+PARA CORRER O PROGRAMA
+------------------------------------------
+
+kubectl port-forward service/ualflix-catalogo 5000:5000
+kubectl port-forward service/ualflix-streaming 7000:7000
+
+minikube service ualflix-frontend

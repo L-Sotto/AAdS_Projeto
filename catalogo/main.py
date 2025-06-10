@@ -50,7 +50,11 @@ def adicionar_video():
         mediainfo = MediaInfo.parse(temp_path)
         for track in mediainfo.tracks:
             if track.track_type == 'General' and track.duration:
+                
                 duracao_segundos = float(track.duration)/1000.0
+                minutos = int(duracao_segundos // 60)
+                segundos = int(duracao_segundos % 60)
+                duracaommss = f"{minutos}:{segundos:02d}"
                 break
     except Exception as e:
         app.logger.error(f"Error ao extrair a duracao: {e}")
@@ -72,7 +76,7 @@ def adicionar_video():
         'descricao': descricao,
         'filename': filename,
         'content_type': arquivo.content_type,
-        'duracao': duracao_segundos,
+        'duracao': duracaommss,
         'file_id': file_id,
         'uploadDate': datetime.utcnow()
     }
@@ -81,7 +85,7 @@ def adicionar_video():
     return jsonify({
         'id': str(result.inserted_id),
         'file_id': str(file_id),
-        'duracao': duracao_segundos
+        'duracao': duracaommss
     }), 201
     
 '''

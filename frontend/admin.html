@@ -229,7 +229,7 @@
         </tr>
       </thead>
       <tbody id="listaVideos">
-        <!-- linhas inseridas via JavaScript -->
+        
       </tbody>
     </table>
   </main>
@@ -264,7 +264,9 @@
     }
 
     function obterVideos() {
-      fetch('http://127.0.0.1:5000/api/videos', { method: 'GET' })
+      fetch('http://127.0.0.1:5000/api/videos', { 
+        method: 'GET' 
+      })
         .then(res => {
           if (!res.ok) throw new Error('Status ' + res.status);
           return res.json();
@@ -298,8 +300,8 @@
         });
     }
 
-    function adicionarVideo(e) {
-      e.preventDefault();
+    function adicionarVideo(evento) {
+      evento.preventDefault();
       const formData = new FormData(document.getElementById('uploadForm'));
       fetch('http://127.0.0.1:5000/api/videos', {
         method: 'POST',
@@ -358,7 +360,7 @@
         });
     }
 
-    // popula a tabela ao carregar a página
+    
     obterVideos();
   </script>
 </body>
