@@ -15,7 +15,7 @@ try:
     client = MongoClient('mongodb://admin:password123@mongodb:27017/')
     db = client.videos_db
     videos_collection = db.videos
-    fs=GridFS.gridfs(db)
+    fs=GridFS(db)
     app.logger.info("Conectado à MongoDB com sucesso")
 except Exception as e:
     app.logger.error(f"Erro ao conectar à MongoDB: {e}")
@@ -24,10 +24,10 @@ except Exception as e:
 #Adicionar videos
 @app.route('/api/videos', methods=['POST'])
 def adicionar_video():
-    if videos_collection in None:
+    if videos_collection is None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
     
-    if 'videoFile' not in request.files:
+    if 'videofile' not in request.files:
         return jsonify({'error': 'Arquivo de vídeo não fornecido'}), 400
     arquivo = request.files['videofile']
     filename = arquivo.filename
@@ -56,7 +56,7 @@ def adicionar_video():
         app.logger.error(f"Error ao extrair a duracao: {e}")
 
     with open(temp_path, 'rb') as f:
-        fileId = fs.put(
+        file_id = fs.put(
             f,
             filename=filename,
             content_type = arquivo.content_type
@@ -73,14 +73,14 @@ def adicionar_video():
         'filename': filename,
         'content_type': arquivo.content_type,
         'duracao': duracao_segundos,
-        'fileId': fileId,
+        'file_id': file_id,
         'uploadDate': datetime.utcnow()
     }
     result = videos_collection.insert_one(metadados)
 
     return jsonify({
         'id': str(result.inserted_id),
-        'file_id': str(fileId),
+        'file_id': str(file_id),
         'duracao': duracao_segundos
     }), 201
     
@@ -146,8 +146,8 @@ def obter_videos():
             duracao = None
             # Tenta obter duração a partir do tamanho do arquivo no GridFS
             try:
-                grid_out = fs.get(ObjectId(file_id))
-                duracao = grid_out.length
+                # grid_out = fs.get(ObjectId(file_id))
+                duracao = doc.get('duracao')
             except Exception:
                 pass
 
