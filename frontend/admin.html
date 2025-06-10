@@ -129,7 +129,7 @@
 
         
         .inputPopup {
-        display: none;               /* começa escondido */
+        display: flex;               /* começa escondido */
         position: fixed;
         top: 0;
         left: 0;
@@ -234,7 +234,7 @@
     <div class="header">
         <div class="videos">
             <h1>Gestao de videos</h1>
-            <button class="adicionar-video-botao" onclick="mostrarPopup()"> Adicionar Video </button>
+            <!-- <button class="adicionar-video-botao" onclick="mostrarPopup()"> Adicionar Video </button> -->
             
         </div>
         
@@ -446,19 +446,19 @@
             obterVideos();
 
 
-        function mostrarPopup() {
-            document.getElementById("uploadPopup").style.display = "flex";
-        }
-        function noPopup() {
-            document.getElementById("uploadPopup").style.display = "none";
-            limpaPopup();
-        }
-        function limpaPopup() {
-            document.getElementById("inputTitulo").value = "";
-            document.getElementById("inputDescricao").value = "";
-            document.getElementById("inputFile").value ="";
+        // function mostrarPopup() {
+        //     document.getElementById("uploadPopup").style.display = "flex";
+        // }
+        // function noPopup() {
+        //     document.getElementById("uploadPopup").style.display = "none";
+        //     limpaPopup();
+        // }
+        // function limpaPopup() {
+        //     document.getElementById("inputTitulo").value = "";
+        //     document.getElementById("inputDescricao").value = "";
+        //     document.getElementById("inputFile").value ="";
             
-        }
+        // }
 
 
 
@@ -537,7 +537,10 @@
             event.preventDefault(); // Previne o envio padrão do formulário
 
             const form = document.getElementById("uploadForm");
-            const formData = new FormData(form);
+            const formData = new FormData();
+            formData.append('titulo', titulo);
+            formData.append('descricao', descricao);
+            formData.append('videofile', video);
 
             fetch("http://127.0.0.1:5000/api/videos", {
                 method: "POST",
@@ -551,8 +554,8 @@
                 } else {
                     messageDiv.innerHTML = <p style="color: green;">Upload realizado com sucesso!</p>;
                     form.reset(); 
-                    limpaPopup();
-                    noPopup();
+                    // limpaPopup();
+                    // noPopup();
                     obterVideos();  
                 }
                 console.log("Resposta do servidor:", data);
