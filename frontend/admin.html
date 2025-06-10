@@ -129,14 +129,14 @@
 
         
         .inputPopup {
-        display: flex;               /* começa escondido */
+        display: flex;
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         background-color: rgba(0, 0, 0, 0.5);
-        z-index: 1000;               /* fica acima do conteúdo */
+        z-index: 1000;             
         justify-content: center;
         align-items: center;
         }
@@ -155,7 +155,6 @@
         color: #000;
         }
 
-        /* A caixa do formulário em si */
         .form-boxupload {
         background-color: #f2f8fc;
         padding: 20px 30px;
@@ -166,14 +165,12 @@
         position: relative;
         }
 
-        /* Título do modal */
         .form-boxupload h2 {
         margin-bottom: 15px;
         color: #333;
         font-size: 20px;
         }
 
-        /* Estilo para cada label + input */
         .form-boxupload label {
         display: block;
         margin-top: 10px;
@@ -191,14 +188,6 @@
         font-size: 14px;
         }
 
-        /* Container dos botões no modal */
-        /* .modal-buttons {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 20px;
-        } */
-
-        /* Botão “Upload” dentro do modal */
         .botaoUpload {
         background-color: #4caf50;
         color: #f2f8fc;
@@ -213,21 +202,6 @@
         background-color: #45a049;
         }
 
-        /* Botão “Cancelar” dentro do modal */
-        /* .btn-cancel {
-        background-color: #bbb;
-        color: #fff;
-        border: none;
-        padding: 10px 18px;
-        font-size: 14px;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-right: 10px;
-        transition: background-color 0.2s;
-        }
-        .btn-cancel:hover {
-        background-color: #999;
-        } */
     </style>
 </head>
 <body>
@@ -264,18 +238,18 @@
             <div class="input-box">
                 
                 <label>Titulo de Video: </label>
-                <input type="text" id="inputTitulo" required>
+                <input type="text" id="titulo" required>
             </div>
             
             <div class="input-box">
                 
-                <input type="text" id = "inputDescricao"required>
+                <input type="text" id = "descricao"required>
                 <label>descricao</label>
             </div>
 
             <div class="input-box">
                 <label class="inputmp4">Video (MP4)</label>
-                <input type="file" id="inputFile" accept="video/mp4" required>
+                <input type="file" id="videofile" accept="video/mp4" required>
             </div>
 
             <button class="botaoUpload" onclick="adicionarVideo(event)">upload</button>
@@ -289,22 +263,6 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script>
 
-        // const wrapper = document.querySelector('.wrapper');
-        // const loginlink = document.querySelector('.login-link');
-        // const buttonpopup = document.querySelector('.loginbutton');
-        // const iconclose = document.querySelector('.icon-close');
-
-        // loginlink.addEventListener('click', ()=>{
-        //     wrapper.classList.remove('active');
-        // });
-
-        // buttonpopup.addEventListener('click', ()=>{
-        //     wrapper.classList.add('active-popup');
-        // });
-
-        // iconclose.addEventListener('click', ()=>{
-        //     wrapper.classList.remove('active-popup');
-        // });
         // async function obterVideos(){
         //     const videosFetch = await fetch('http://127.0.0.1:5000/api/video', {method: 'GET', headers: {'Content-Type': 'application/json'}});
         //     if (!videosFetch.ok) {
@@ -463,84 +421,11 @@
 
 
 
-        // function adicionarVideo() {
-        //     const titulo = document.getElementById("inputTitulo").value.trim();
-        //     const descricao = document.getElementById("inputDescricao").value.trim();
-        //     const video = document.getElementById("inputFile").files[0];
-            
-        //     if (!titulo || !descricao || !video) {
-        //         alert("Todos os campos são obrigatórios!");
-        //         return;
-        //     }
-        //     const formData = new FormData();
-        //     formData.append('titulo', titulo);
-        //     formData.append('descricao', descricao);
-        //     formData.append('videofile', video);
-        //     try {
-        //         const resposta = fetch('http://127.0.0.1:5000/api/video', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: formData
-        //         })
-        //         if(!resposta.ok){
-        //             console.error("Statos do POST: ", resposta.status);
-        //             const erro = resposta.text();
-        //             alert("Nao foi possivel adicionar video. ")
-        //             return;
-        //         }
-        //         console.log("Video adicionado")
-        //         noPopup();
-        //         obterVideos();
-        //     } catch (error) {
-        //         console.error("Erro ao iniciar fetch de adição:", error);
-        //     }
-        // }
-
-
-        
-        // function adicionarVideo(event) {
-        //     event.preventDefault();
-
-        //     const form = document.getElementById("uploadForm");
-        //     //const formData = new FormData(form);
-        //     const dados = Object.fromEntries(new FormData(form));
-        //     //const messageDiv = document.getElementById("messageupload");
-
-        //     fetch("http://127.0.0.1:5000/api/videos", {
-        //         method: "POST",
-        //         //headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(dados)
-        //     })
-        //     .then(response => {
-        //         if (!response.ok) {
-        //         return response.json().then(err => {
-        //             throw err; // dispara pro .catch
-        //         });
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         // data é o JSON de sucesso
-        //         //messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
-        //         limpaPopup();
-        //         obterVideos();
-        //         noPopup();
-        //     })
-        //     .catch(err => {
-        //         // err pode ser a resposta JSON ou um Error de rede
-        //         const msg = err.message || JSON.stringify(err);
-        //         //messageDiv.innerHTML = `<p style="color: red;">Erro: ${msg}</p>`;
-        //         console.error("Erro no upload:", err);
-        //     });
-        //     }
         function adicionarVideo(event) {
-            event.preventDefault(); // Previne o envio padrão do formulário
+            event.preventDefault();
 
             const form = document.getElementById("uploadForm");
             const formData = new FormData();
-            formData.append('titulo', titulo);
-            formData.append('descricao', descricao);
-            formData.append('videofile', video);
 
             fetch("http://127.0.0.1:5000/api/videos", {
                 method: "POST",
@@ -550,10 +435,10 @@
             .then(data => {
                 const messageDiv = document.getElementById("messageupload");
                 if (data.status && data.status === "error") {
-                    messageDiv.innerHTML = <p style="color: red;">Erro: ${data.message}</p>;
+                    messageDiv.innerHTML = `<p style="color: red;">Erro: ${data.message}</p>`;
                 } else {
-                    messageDiv.innerHTML = <p style="color: green;">Upload realizado com sucesso!</p>;
-                    form.reset(); 
+                    messageDiv.innerHTML = `<p style="color: green;">Upload realizado com sucesso!</p>`;
+                    form.reset();
                     // limpaPopup();
                     // noPopup();
                     obterVideos();  
@@ -563,7 +448,7 @@
             .catch(error => {
                 console.error("Erro:", error);
                 const messageDiv = document.getElementById("messageupload");
-                messageDiv.innerHTML = <p style="color: red;">Ocorreu um erro no upload. ${error}.</p>;
+                messageDiv.innerHTML = `<p style="color: red;">Ocorreu um erro no upload. ${error}.</p>`;
             });
         }
 
