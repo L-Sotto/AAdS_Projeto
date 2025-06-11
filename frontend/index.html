@@ -113,7 +113,7 @@
         }
 
 
-        /* .videos-container {
+        .videos-container {
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
@@ -133,9 +133,7 @@
         .video-card p {
         margin-bottom: 0.5rem;
         color: #555;
-        } */
-
-
+        }
 
     </style>
 
@@ -161,9 +159,9 @@
 
     <script>
     // Dispara logo que o DOM estiver pronto
-        document.addEventListener('DOMContentLoaded', displayVideos);
+        document.addEventListener('DOMContentLoaded', obterVideos);
 
-        function displayVideos() {
+        function obterVideos() {
         // Faz o fetch ao teu micro-serviço de streaming
         fetch('http://127.0.0.1:7000/api/videos', {
             method: 'GET'
