@@ -112,7 +112,7 @@
             padding-right: 275px;
         }
 
-        /*
+        
         .videos-container {
         display: flex;
         flex-wrap: wrap;
@@ -134,14 +134,14 @@
         margin-bottom: 0.5rem;
         color: #555;
         }
-        */
+        
 
-        .videos-container {
+        /*.videos-container {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 1rem;
         padding: 1rem;
-        }
+        }*/
         .video-card {
         background: #fff;
         border-radius: 0.5rem;
@@ -179,7 +179,7 @@
         font-size: 1.5rem;
         cursor: pointer;
         }
-
+            
     </style>
 
 </head>
@@ -299,84 +299,79 @@
 
         }
 
-    </script> -->
+    </script>  -->
 
-    <script>
-        document.addEventListener('DOMContentLoaded', obterVideos);
+    <!-- … mantém o teu HTML e CSS inalterados, só muda o script … -->
+<script>
+document.addEventListener('DOMContentLoaded', obterVideos);
 
-        function obterVideos() {
-            fetch('http://127.0.0.1:7000/api/videos')
-            .then(res => {
-                if (!res.ok) throw new Error('Falha ao obter lista de vídeos: ' + res.status);
-                return res.json();
-            })
-            .then(videos => {
-                const container = document.getElementById('videosContainer');
-                container.innerHTML = '';
+function obterVideos() {
+  fetch('http://127.0.0.1:7000/api/videos')
+    .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
+    .then(videos => {
+      const container = document.getElementById('videosContainer');
+      container.innerHTML = '';
 
-                videos.forEach(video => {
-                const card = popularCards(video);
-                container.appendChild(card);
-                });
-            })
-            .catch(err => {
-                console.error('Erro ao carregar vídeos:', err);
-                document.getElementById('videosContainer')
-                .innerHTML = `<p style="color:red;">${err.message}</p>`;
-            });
-        }
+      videos.forEach(video => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        // guardamos o URL real no dataset
+        card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
 
-        // Esta função transforma um objeto `video` num <div class="video-card">
-        function popularCards(video) {
-            fetch(`http://127.0.0.1:7000/api/videos/${video.id}`, {
-        method: 'GET',
-        });
+        const titulo = document.createElement('h2');
+        titulo.textContent = video.titulo;
 
-            const painel = document.createElement('div');
-            painel.className = 'videoPainel';
-            // guardamos a URL real no data-src
-            //card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
+        const descricao = document.createElement('p');
+        descricao.textContent = video.descricao;
 
-            const titulo = document.createElement('h2');
-            titulo.textContent = video.titulo;
+        // placeholder (pode ser um thumbnail ou só um ícone ►)
+        const thumb = document.createElement('div');
+        thumb.className = 'video-thumb';
+        thumb.textContent = '►';  
+        thumb.style.fontSize = '3rem';
+        thumb.style.textAlign = 'center';
+        thumb.style.cursor = 'pointer';
 
-            const descricao = document.createElement('p');
-            descricao.textContent = video.descricao;
+        card.append(titulo, descricao, thumb);
+        container.appendChild(card);
+      });
+    })
+    .catch(err => {
+      document.getElementById('videosContainer')
+              .innerHTML = `<p style="color:red;">Erro: ${err}</p>`;
+    });
+}
 
-            // thumbnail placeholder (podes trocar por <img>)
-            const thumb = document.createElement('div');
-            thumb.className = 'video-thumb';
-            thumb.textContent = '►';
-            thumb.style.fontSize = '3rem';
-            thumb.style.textAlign = 'center';
+// quando clicar num card, abre o modal e carrega só esse vídeo
+document.getElementById('videosContainer').addEventListener('click', e => {
+  const card = e.target.closest('.video-card');
+  if (!card) return;
+  const src = card.dataset.src;
 
-            card.append(titulo, descricao, thumb);
-            return card;
-        }
+  const modal    = document.getElementById('videoModal');
+  const modalVid = document.getElementById('modalVideo');
+  const closeBtn = document.getElementById('closeModal');
 
-        // Configura o modal apenas UMA vez
-        const modal    = document.getElementById('videoModal');
-        const modalVid = document.getElementById('modalVideo');
-        const closeBtn = document.getElementById('closeModal');
+  modalVid.src = src;
+  modal.classList.remove('hidden');
+  modalVid.play();
 
-        document.getElementById('videosContainer')
-            .addEventListener('click', e => {
-            const card = e.target.closest('.video-card');
-            if (!card) return;
-            modalVid.src = card.dataset.src;
-            modal.classList.remove('hidden');
-            modalVid.play();
-            });
+  // fechar modal
+  function fechar() {
+    modalVid.pause();
+    modalVid.currentTime = 0;
+    modalVid.src = '';
+    modal.classList.add('hidden');
+    closeBtn.removeEventListener('click', fechar);
+    modal.querySelector('.modal-backdrop')
+         .removeEventListener('click', fechar);
+  }
 
-        closeBtn.addEventListener('click', () => {
-            modalVid.pause();
-            modalVid.currentTime = 0;
-            modalVid.src = '';
-            modal.classList.add('hidden');
-        });
-        modal.querySelector('.modal-backdrop')
-            .addEventListener('click', () => closeBtn.click());
-    </script>
+  closeBtn.addEventListener('click', fechar);
+  modal.querySelector('.modal-backdrop').addEventListener('click', fechar);
+});
+</script>
+
 
 
 
