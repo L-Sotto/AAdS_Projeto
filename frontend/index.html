@@ -154,11 +154,11 @@
         display: flex; align-items: center; justify-content: center;
         z-index: 100;
         }
-        .video-modal.hidden { display: none; }
+        /* .video-modal.hidden { display: none; }
         .modal-backdrop {
         position: absolute; top: 0; left: 0; right: 0; bottom: 0;
         background: rgba(0,0,0,0.6);
-        }
+        } */
         .modal-content {
         position: relative;
         background: #fff;
@@ -208,7 +208,7 @@
         <video id="modalVideo" controls></video>
     </div>
     </div>
-
+    
     <!-- <script>
  
         document.addEventListener('DOMContentLoaded', obterVideos);
@@ -302,75 +302,125 @@
     </script>  -->
 
     <!-- … mantém o teu HTML e CSS inalterados, só muda o script … -->
-<script>
-document.addEventListener('DOMContentLoaded', obterVideos);
+    <script>
+        //obterVideos();
 
-function obterVideos() {
-  fetch('http://127.0.0.1:7000/api/videos')
-    .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
-    .then(videos => {
-      const container = document.getElementById('videosContainer');
-      container.innerHTML = '';
+        // function obterVideos() {
+        // fetch('http://127.0.0.1:7000/api/videos',{
+        //     method: 'GET'
+        // })
+        //     .then(res => {
+        //         if (!res.ok) throw new Error('Status ' + res.status);
+        //         return res.json();
+        //     })
+        //     .then(videos => {
+        //     const container = document.getElementById('videosContainer');
+        //     container.innerHTML = '';
 
-      videos.forEach(video => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        // guardamos o URL real no dataset
-        card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
+        //     videos.forEach(video => {
+        //         const card = document.createElement('div');
+        //         card.className = 'video-card';
+        //         // guardamos o URL real no dataset
+        //         card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
 
-        const titulo = document.createElement('h2');
-        titulo.textContent = video.titulo;
+        //         const titulo = document.createElement('h2');
+        //         titulo.textContent = video.titulo;
 
-        const descricao = document.createElement('p');
-        descricao.textContent = video.descricao;
+        //         const descricao = document.createElement('p');
+        //         descricao.textContent = video.descricao;
 
-        // placeholder (pode ser um thumbnail ou só um ícone ►)
-        const thumb = document.createElement('div');
-        thumb.className = 'video-thumb';
-        thumb.textContent = '►';  
-        thumb.style.fontSize = '3rem';
-        thumb.style.textAlign = 'center';
-        thumb.style.cursor = 'pointer';
+        //         // placeholder (pode ser um thumbnail ou só um ícone ►)
+        //         const thumb = document.createElement('div');
+        //         thumb.className = 'video-thumb';
+        //         thumb.textContent = '►';  
+        //         thumb.style.fontSize = '3rem';
+        //         thumb.style.textAlign = 'center';
+        //         thumb.style.cursor = 'pointer';
 
-        card.append(titulo, descricao, thumb);
-        container.appendChild(card);
-      });
-    })
-    .catch(err => {
-      document.getElementById('videosContainer')
-              .innerHTML = `<p style="color:red;">Erro: ${err}</p>`;
-    });
-}
+        //         card.append(titulo, descricao, thumb);
+        //         container.appendChild(card);
+        //     });
+        //     })
+        //     .catch(err => {
+        //     document.getElementById('videosContainer')
+        //             .innerHTML = `<p style="color:red;">Erro: ${err}</p>`;
+        //     });
+        // }
+        function obterVideos() {
+            fetch('http://127.0.0.1:7000/api/videos',{
+                method: 'GET'
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Status ' + res.status);
+                    return res.json();
+                })
+                .then(videos => {
+                    console.log("videos carregados: ", videos);
+                    const container = document.getElementById('videosContainer');
+                    container.innerHTML = '';
+                    console.log("container criado");
+                    videos.forEach(video => {
+                        console.log("info video: " , video);
+                        const card = document.createElement('div');
+                        card.className = 'video-card';
+                        // guardamos o URL real no dataset
+                        card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
 
-// quando clicar num card, abre o modal e carrega só esse vídeo
-document.getElementById('videosContainer').addEventListener('click', e => {
-  const card = e.target.closest('.video-card');
-  if (!card) return;
-  const src = card.dataset.src;
+                        const titulo = document.createElement('h2');
+                        titulo.textContent = video.titulo;
 
-  const modal    = document.getElementById('videoModal');
-  const modalVid = document.getElementById('modalVideo');
-  const closeBtn = document.getElementById('closeModal');
+                        const descricao = document.createElement('p');
+                        descricao.textContent = video.descricao;
 
-  modalVid.src = src;
-  modal.classList.remove('hidden');
-  modalVid.play();
+                        // placeholder (pode ser um thumbnail ou só um ícone ►)
+                        const thumb = document.createElement('div');
+                        thumb.className = 'video-thumb';
+                        thumb.textContent = '►';  
+                        thumb.style.fontSize = '3rem';
+                        thumb.style.textAlign = 'center';
+                        thumb.style.cursor = 'pointer';
 
-  // fechar modal
-  function fechar() {
-    modalVid.pause();
-    modalVid.currentTime = 0;
-    modalVid.src = '';
-    modal.classList.add('hidden');
-    closeBtn.removeEventListener('click', fechar);
-    modal.querySelector('.modal-backdrop')
-         .removeEventListener('click', fechar);
-  }
+                        card.append(titulo, descricao, thumb);
+                        container.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    console.error("erro: ", err);
+                    document.getElementById('videosContainer')
+                    .innerHTML = `<p style="color:red;">Erro: ${err}</p>`;
+                });
+        }
 
-  closeBtn.addEventListener('click', fechar);
-  modal.querySelector('.modal-backdrop').addEventListener('click', fechar);
-});
-</script>
+
+        // quando clicar num card, abre o modal e carrega só esse vídeo
+        document.getElementById('videosContainer').addEventListener('click', e => {
+        const card = e.target.closest('.video-card');
+        if (!card) return;
+        const src = card.dataset.src;
+
+        const modal    = document.getElementById('videoModal');
+        const modalVid = document.getElementById('modalVideo');
+        const closeBtn = document.getElementById('closeModal');
+
+        modalVid.src = src;
+        modal.classList.remove('hidden');
+        modalVid.play();
+
+        // fechar modal
+        function fechar() {
+            modalVid.pause();
+            modalVid.currentTime = 0;
+            modalVid.src = '';
+            modal.classList.add('hidden');
+            closeBtn.removeEventListener('click', fechar);
+            modal.querySelector('.modal-backdrop')
+                .removeEventListener('click', fechar);
+        }
+
+        closeBtn.addEventListener('click', fechar);
+        modal.querySelector('.modal-backdrop').addEventListener('click', fechar);
+        });
+    </script>
 
 
 
