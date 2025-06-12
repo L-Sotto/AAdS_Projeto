@@ -39,16 +39,13 @@ except Exception as e:
 
 @app.route('/api/videos', methods=['GET'])
 def listar_videos():
-<<<<<<< HEAD
     """Retorna lista de vídeos (id, título, descrição, duração)."""
     if videos_collection is None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
 
-=======
     """Retorna lista de vídeos, usando metadata e GridFS como fallback."""
     videos = []
     # 1) Tenta usar coleção de metadata
->>>>>>> 529108e3d9cce7d43d712e02e843b0a0b835358e
     try:
         for doc in videos_collection.find():
             file_id = doc.get('file_id')
@@ -113,6 +110,5 @@ def stream_video(video_id):
         return jsonify({'error': 'Erro interno ao enviar vídeo'}), 500
 
 if __name__ == "__main__":
-    # Ajuste a porta para 7000 (conforme o Deployment)
     app.run(host="0.0.0.0", port=7000, debug=False)
 
