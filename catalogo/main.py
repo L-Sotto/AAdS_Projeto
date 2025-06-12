@@ -157,7 +157,6 @@ def obter_videos():
 
             videos.append({
                 'id': str(doc.get('_id')),
-                'id': str(doc.get('_id')),
                 'titulo': doc.get('titulo'),
                 'descricao': doc.get('descricao'),
                 'duracao': duracao
