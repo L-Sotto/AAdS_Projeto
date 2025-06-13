@@ -8,8 +8,11 @@ import os
 from datetime import datetime
 # from moviepy.editor import VideoFileClip
 from pymediainfo import MediaInfo
+
+
 app = Flask(__name__)
 CORS(app)
+
 
 try:
     client = MongoClient('mongodb://admin:password123@mongodb:27017/')
@@ -88,60 +91,13 @@ def adicionar_video():
         'duracao': duracaommss
     }), 201
     
-'''
-    try:
-        titulo = request.form.get('titulo', "").strip()
-        descricao = request.form.get('descricao', "").strip()
-        
-        if not titulo or not descricao:
-            return jsonify({'status': 'error', 'message':'Dados nao fornecidos'}), 400
-        arquivo = request.files['videofile']
-        if arquivo == "":
-            return jsonify({'error': 'Nenhum arquivo selecionado'}), 400
-        
-        fileId = fs.put(
-            arquivo.stream,
-            filename = arquivo.filename,
-            content_type = arquivo.content_type
-        )
-        metadados = {
-            'Titulo': titulo,
-            'Descricao': descricao,
-            'file_id': fileId,
-            'filename': arquivo.filename,
-            'content_type': arquivo.content_type
-        }
-        col_id = videos_collection.insert_one(metadados)
-
-        return jsonify({
-            'id': str(col_id.inserted_id),
-            'file_id': str(fileId),
-            # 'duracao': duracaoo,
-            'message': 'Adicionado :)'
-        }), 201
-    except Exception as e:
-        app.logger.error(f"Error ao criar o video: {e}")
-        return jsonify({'error': 'Erro interno'}), 500
-'''
-
-#Lista dos videos.
-# @app.route('/api/video', methods=['GET'])
-# def obter_videos():
-#     try:
-#         video = videos_collection.find_one({'id_': ObjectId(id)})
-#         if not video:
-#             return jsonify({'error': 'Video nao encontrado :('}),404
-#         return jsonify(str(video['_id']))
-#     except Exception as e:
-#         app.logger.error(f"Erro ao obter o video: {e}")
-#         return jsonify({'error': 'Erro interno do servidor'}), 500
 
 @app.route('/api/videos', methods=['GET'])
 def obter_videos():
-   
+    
     if videos_collection is None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
-
+    
     try:
         docs = videos_collection.find()
         videos = []
@@ -170,20 +126,6 @@ def obter_videos():
         return jsonify({'error': 'Erro ao listar vídeos.'}), 500
 
     
-#listavideos
-# def serializar_video(video):
-#     video['_id'] = str(video['_id'])
-#     return video
-
-# @app.route('/api/video', methods=['GET'])
-# def listar_videos():
-#     try:
-#         videos = list(videos_collection.find())
-#         return jsonify(str(v['_id']) for v in videos)
-#     except Exception as e:
-#         app.logger.error(f"Erro ao listar videos: {e}")
-#         return jsonify({'error': 'Erro interno do servidor'}), 500
-
 
 
 #pesquisar video por ID.

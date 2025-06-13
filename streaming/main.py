@@ -1,16 +1,17 @@
-# from flask import Flask, request, jsonify
-# from flask_cors import CORS
-
-# app = Flask(__name__)
-# CORS(app)
-from flask import Flask, Response, stream_with_context, jsonify
+from flask import Flask, Response, stream_with_context, jsonify, send_file, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from gridfs import GridFS
 from bson import ObjectId
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+CACHE_DIR = os.path.join(os.getcwd(), "video_cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+
 
 # Conectar ao MongoDB
 try:
@@ -24,9 +25,11 @@ except Exception as e:
 
 @app.route('/api/videos', methods=['GET'])
 def listar_videos():
+    
     docs = videos_collection.find()
     if videos_collection is None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
+
 
     try:
         videos = []
@@ -37,6 +40,7 @@ def listar_videos():
                 'descricao': doc.get('descricao'),
                 'duracao': doc.get('duracao')
             })
+    
         return jsonify(videos), 200
     except Exception as e:
         app.logger.error(f"Erro ao listar vídeos: {e}")
@@ -44,6 +48,15 @@ def listar_videos():
 
 @app.route('/api/videos/<video_id>', methods=['GET'])
 def stream_video(video_id):
+
+    cache_path = os.path.join(CACHE_DIR, f"{video_id}.mp4")
+    if os.path.exists(cache_path):
+    resp = send_file(cache_path,
+                        conditional=True,
+                        mimetype='video/mp4')    # or grid_out.content_type
+    resp.headers['X-Cache-Status'] = 'HIT'
+    return resp
+
     """Faz o streaming do arquivo do GridFS."""
     try:
         video = videos_collection.find_one({'_id': ObjectId(video_id)})
@@ -56,7 +69,7 @@ def stream_video(video_id):
         def generate():
             for chunk in grid_out:
                 yield chunk
-
+        
         return Response(
             stream_with_context(generate()),
             mimetype=grid_out.content_type,
