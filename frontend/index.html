@@ -309,6 +309,7 @@ function obterVideos() {
   fetch('http://127.0.0.1:7000/api/videos')
     .then(res => res.ok ? res.json() : Promise.reject(res.statusText))
     .then(videos => {
+        console.log("vidios: ", videos);
       const container = document.getElementById('videosContainer');
       container.innerHTML = '';
 

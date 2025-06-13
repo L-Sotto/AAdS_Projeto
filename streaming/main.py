@@ -16,20 +16,21 @@ CORS(app)
 try:
     client = MongoClient('mongodb://admin:password123@mongodb:27017/')
     db = client.videos_db
-    fs = GridFS(db)
     videos_collection = db.videos
+    fs = GridFS(db)
     app.logger.info("Conectado ao MongoDB com sucesso")
 except Exception as e:
     app.logger.error(f"Erro ao conectar ao MongoDB: {e}")
 
 @app.route('/api/videos', methods=['GET'])
 def listar_videos():
+    docs = videos_collection.find()
     if videos_collection is None:
         return jsonify({'error': 'Banco de dados inacessível.'}), 500
 
     try:
         videos = []
-        for doc in videos_collection.find():
+        for doc in docs:
             videos.append({
                 'id': str(doc.get('_id')),
                 'titulo': doc.get('titulo'),
