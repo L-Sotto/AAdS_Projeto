@@ -24,12 +24,14 @@ except Exception as e:
 
 @app.route('/api/videos', methods=['GET'])
 def listar_videos():
-    """Retorna lista de vídeos (id, título, descrição, duração)."""
+    if videos_collection is None:
+        return jsonify({'error': 'Banco de dados inacessível.'}), 500
+
     try:
         videos = []
         for doc in videos_collection.find():
             videos.append({
-                'id': str(doc['_id']),
+                'id': str(doc.get('_id')),
                 'titulo': doc.get('titulo'),
                 'descricao': doc.get('descricao'),
                 'duracao': doc.get('duracao')
