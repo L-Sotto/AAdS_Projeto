@@ -1,5 +1,6 @@
 minikube start --nodes=3 --driver=docker
 
+kubectl delete configmap frontend-html
 kubectl create configmap frontend-html --from-file=./frontend/
 
 kubectl apply -f ualflix-frontend-deployment.yaml
