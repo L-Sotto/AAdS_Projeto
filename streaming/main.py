@@ -49,37 +49,74 @@ def listar_videos():
 @app.route('/api/videos/<video_id>', methods=['GET'])
 def stream_video(video_id):
 
-    cache_path = os.path.join(CACHE_DIR, f"{video_id}.mp4")
-    if os.path.exists(cache_path):
-    resp = send_file(cache_path,
-                        conditional=True,
-                        mimetype='video/mp4')    # or grid_out.content_type
-    resp.headers['X-Cache-Status'] = 'HIT'
-    return resp
+    # cache_path = os.path.join(CACHE_DIR, f"{video_id}.mp4")
+    # if os.path.exists(cache_path):
+    # resp = send_file(cache_path,
+    #                     conditional=True,
+    #                     mimetype='video/mp4')    # or grid_out.content_type
+    # resp.headers['X-Cache-Status'] = 'HIT'
+    # return resp
 
-    """Faz o streaming do arquivo do GridFS."""
-    try:
-        video = videos_collection.find_one({'_id': ObjectId(video_id)})
-        if not video:
-            return jsonify({'error': 'Vídeo não encontrado'}), 404
+    # """Faz o streaming do arquivo do GridFS."""
+    # try:
+    #     video = videos_collection.find_one({'_id': ObjectId(video_id)})
+    #     if not video:
+    #         return jsonify({'error': 'Vídeo não encontrado'}), 404
 
-        file_id = video.get('file_id')
-        grid_out = fs.get(ObjectId(file_id))
+    #     file_id = video.get('file_id')
+    #     grid_out = fs.get(ObjectId(file_id))
 
-        def generate():
-            for chunk in grid_out:
-                yield chunk
+    #     def generate():
+    #         for chunk in grid_out:
+    #             yield chunk
         
-        return Response(
-            stream_with_context(generate()),
-            mimetype=grid_out.content_type,
-            headers={
-                # Se precisar de Range Requests, pode adicionar headers aqui
-            }
+    #     return Response(
+    #         stream_with_context(generate()),
+    #         mimetype=grid_out.content_type,
+    #         headers={
+    #             # Se precisar de Range Requests, pode adicionar headers aqui
+    #         }
+    #     )
+    # except Exception as e:
+    #     app.logger.error(f"Erro ao enviar vídeo: {e}")
+    #     return jsonify({'error': 'Erro interno ao enviar vídeo'}), 500
+
+    cache_path = os.path.join(CACHE_DIR, f"{video_id}.mp4")
+
+    # 1) Se já estiver em cache em disco, serve-o diretamente
+    if os.path.isfile(cache_path):
+        resp = send_file(
+            cache_path,
+            conditional=True,          # lida com If-Modified-Since/ETag
+            mimetype='video/mp4',      # ou o grid_out.content_type original
+            as_attachment=False
         )
-    except Exception as e:
-        app.logger.error(f"Erro ao enviar vídeo: {e}")
-        return jsonify({'error': 'Erro interno ao enviar vídeo'}), 500
+        resp.headers['Cache-Control']    = 'public, max-age=3600'
+        resp.headers['Accept-Ranges']    = 'bytes'
+        resp.headers['X-Cache-Status']   = 'HIT'
+        return resp
+
+    # 2) Caso contrário, busca do GridFS, grava em disco e depois serve
+    video = videos_collection.find_one({'_id': ObjectId(video_id)})
+    if not video:
+        return jsonify({'error': 'Vídeo não encontrado'}), 404
+
+    grid_out = fs.get(ObjectId(video['file_id']))
+    # grava o ficheiro completo no disco
+    with open(cache_path, 'wb') as f:
+        for chunk in grid_out:
+            f.write(chunk)
+
+    # serve-o com send_file (e headers de cache)
+    resp = send_file(
+        cache_path,
+        conditional=True,
+        mimetype=grid_out.content_type
+    )
+    resp.headers['Cache-Control']    = 'public, max-age=3600'
+    resp.headers['Accept-Ranges']    = 'bytes'
+    resp.headers['X-Cache-Status']   = 'MISS'
+    return resp
 
 if __name__ == "__main__":
     # Ajuste a porta para 7000 (conforme o Deployment)

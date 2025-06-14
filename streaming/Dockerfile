@@ -7,7 +7,7 @@ COPY main.py .
 
 #RUN pip install flask
 #RUN pip install -r requirements.txt
-RUN pip install flask flask-cors pymongo gridfs
+RUN pip install flask flask-cors pymongo 
 RUN mkdir -p /app/video_cache
 CMD ["python", "main.py"]
 
