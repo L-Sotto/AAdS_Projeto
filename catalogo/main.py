@@ -147,6 +147,13 @@ def apagar_video(id):
         apagado = videos_collection.delete_one({'_id':ObjectId(id)})
         if apagado.deleted_count == 0:
             return jsonify({'error': 'video nao apagado'}), 404
+        file_id = apagado.get('file_id')
+        if file_id:
+            try:
+                fs.delete(ObjectId(file_id))
+
+            except Exception as e:
+                app.logger.warning(f"Erro ao apagar video no GridFS: {e}")
         return jsonify({'message': 'video apagado com sucesso'})
     except Exception as e:
         app.logger.error(f"Erro ao apagar o video: {e}")
@@ -164,8 +171,6 @@ def editar_video(id):
         atualizado = {
             'titulo': data.get('titulo'),
             'descricao': data.get('descricao'),
-            'duracao': data.get('duracao'),
-            'url': data.get('url')
         }
         resultado = videos_collection.update_one(
             {'_id': ObjectId(id)},

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel Administrativo</title>
   <style>
-    /* reset básico */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -20,7 +19,6 @@
       align-items: center;
     }
 
-    /* cabeçalho escuro */
     .header {
       width: 100%;
       background: #333;
@@ -47,18 +45,16 @@
       background: #164699d5;
     }
 
-    /* área branca logo abaixo do header */
     .content {
       background: #fff;
       width: 90%;
       max-width: 960px;
-      margin-top: 0;       /* colado ao header */
+      margin-top: 0;
       padding: 1.5rem;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
-    /* tabela */
     .content table {
       width: 100%;
       border-collapse: collapse;
@@ -87,7 +83,6 @@
       cursor: pointer;
     }
 
-    /* coluna de ações */
     .acao {
       text-align: right;
     }
@@ -115,7 +110,7 @@
       background: #c0392b;
     }
 
-    /* popup (inicialmente oculto) */
+
     .inputPopup {
       display: none;
       position: fixed;
@@ -185,7 +180,6 @@
       background: #45a049;
     }
 
-    /* responsividade */
     @media (max-width: 600px) {
       .content table {
         display: block;
@@ -207,6 +201,77 @@
         margin-bottom: 10px;
       }
     }
+
+
+    .popupEditar {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .popupEditar.active {
+      display: flex;
+    }
+    .form-boxeditar {
+      background: #f2f8fc;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
+    .form-boxeditar h2 {
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 20px;
+    }
+    .form-boxeditar label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+      color: #333;
+      font-size: 14px;
+    }
+    .form-boxeditar input[type="text"]{
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 5px;
+      border: 1px solid #2d313451;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .icon-close-editar {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 24px;
+      color: #555;
+      cursor: pointer;
+      transition: color .2s;
+    }
+    .icon-close-editar:hover {
+      color: #000;
+    }
+    .botaoGuardar {
+      margin-top: 15px;
+      background: #4caf50;
+      color: #f2f8fc;
+      border: none;
+      padding: 10px 18px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .botaoGuardar:hover {
+      background: #45a049;
+    }
+
+
   </style>
 </head>
 <body>
@@ -253,14 +318,41 @@
     </div>
   </div>
 
+  <div id="popupEditar" class="popupEditar">
+    <div class="form-boxeditar">
+      <span class="icon-close-editar" onclick="noEditPopup()">
+        <ion-icon name="close"></ion-icon>
+      </span>
+      <form id="editarForm" onsubmit="editarVideo(event)">
+        <h2>Editar Videos</h2>
+        <label for="titulo">Título:</label>
+        <input type="text" id="tituloeditado" name="titulo">
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricaoeditado" name="descricao">
+        <button class="botaoGuardar" type="submit">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+
   <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
   <script>
+    let videoeditar = null;
     function mostrarPopup() {
       document.getElementById('uploadPopup').classList.add('active');
     }
+    function mostrarEditPopup(id, dados) {
+      videoeditar = id;
+      document.getElementById('tituloeditado').value = dados.titulo;
+      document.getElementById('descricaoeditado').value = dados.descricao
+      document.getElementById('popupEditar').classList.add('active');
+    }
     function noPopup() {
       document.getElementById('uploadPopup').classList.remove('active');
+    }
+    function noEditPopup() {
+      document.getElementById('popupEditar').classList.remove('active');
     }
 
     function obterVideos() {
@@ -281,12 +373,11 @@
               <td>${video.descricao}</td>
               <td>${video.duracao}</td>
               <td class="acao">
-                <button class="botaoEditar"
-                  onclick="editarVideo('${video._id}', ${JSON.stringify(video)})">
+                <button class="botaoEditar" onclick='mostrarEditPopup("${video.id}", ${JSON.stringify(video)})'>
                   Editar
                 </button>
                 <button class="botaoEliminar"
-                  onclick="removerVideo('${video._id}')">
+                  onclick="removerVideo('${video.id}')">
                   Eliminar
                 </button>
               </td>
@@ -326,41 +417,45 @@
         });
     }
 
-    function editarVideo(id, dados) {
-      const novoTitulo = prompt('Novo título:', dados.titulo) || dados.titulo;
-      const novaDesc  = prompt('Nova descrição:', dados.descricao) || dados.descricao;
-      fetch(`http://127.0.0.1:5000/api/videos/${id}`, {
+    function editarVideo(evento) {
+      evento.preventDefault();
+      const novoTitulo = document.getElementById('tituloeditado').value.trim();
+      const novaDesc = document.getElementById('descricaoeditado').value.trim();
+      fetch(`http://127.0.0.1:5000/api/videos/${videoeditar}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           titulo: novoTitulo,
           descricao: novaDesc,
-          duracao: dados.duracao,
-          url: dados.url
         })
       })
         .then(res => {
           if (!res.ok) throw new Error('Status ' + res.status);
           return res.json();
         })
-        .then(() => obterVideos())
+        .then(() =>{
+          noEditPopup();
+          obterVideos();
+
+        })
         .catch(err => {
           console.error('Erro ao editar:', err);
           alert('Não foi possível editar o vídeo.');
         });
     }
 
-    function removerVideo(id) {
-      if (!confirm('Confirma exclusão deste vídeo?')) return;
-      fetch(`http://127.0.0.1:5000/api/videos/${id}`, { method: 'DELETE' })
-        .then(() => obterVideos())
-        .catch(err => {
-          console.error('Erro ao eliminar:', err);
-          alert('Não foi possível eliminar o vídeo.');
-        });
-    }
+function removerVideo(id) {
+  if (!confirm('Quer mesmo escolher este video?')) return;
+  fetch(`http://127.0.0.1:5000/api/videos/${id}`, { 
+    method: 'DELETE' 
+  })
+    .then(() => obterVideos())
+    .catch(err => {
+      console.error('Erro ao eliminar:', err);
+      alert('Não foi possível eliminar o vídeo.');
+    });
+}
 
-    
     obterVideos();
   </script>
 </body>
