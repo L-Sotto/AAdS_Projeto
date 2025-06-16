@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <title>Painel Administrativo</title>
   <style>
     * {
@@ -21,7 +25,7 @@
 
     .header {
       width: 100%;
-      background: #333;
+      background: #0d1b2a;
       color: #f2f8fc;
       padding: 15px;
       display: flex;
@@ -32,21 +36,26 @@
       font-size: 24px;
     }
     .adicionar-video-botao {
-      background: #164599;
+      background-color: #415a77;
       color: #f2f8fc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      outline: none;
       border: none;
-      padding: 10px 15px;
       border-radius: 4px;
-      font-size: 14px;
+      padding: 6px 12px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background .2s;
+      font-family:  'Nunito', sans-serif;
     }
     .adicionar-video-botao:hover {
-      background: #164699d5;
+      background: #415a77b7;
     }
 
     .content {
-      background: #fff;
+      background: #f2f8fc;
       width: 90%;
       max-width: 960px;
       margin-top: 0;
@@ -63,7 +72,7 @@
     }
     .content thead th {
       background: #f2f8fc;
-      color: #333;
+      color: #0d1b2a;
       font-weight: 600;
       padding: 12px 15px;
       text-align: left;
@@ -71,15 +80,15 @@
     }
     .content tbody td {
       padding: 12px 15px;
-      color: #555;
-      border-bottom: 1px solid #eee;
+      color: #1b263b;
+      border-bottom: 1px solid #f2f8fc;
     }
     .content tbody tr:nth-child(odd),
     .content tbody tr:nth-child(even) {
       background: #f2f8fc;
     }
     .content tbody tr:hover {
-      background: #e6eff7;
+      background: #f2f8fc;
       cursor: pointer;
     }
 
@@ -97,17 +106,17 @@
       transition: background .2s;
     }
     .botaoEditar {
-      background: #3d95dd;
+      background: #4b7842;
       margin-right: 8px;
     }
     .botaoEditar:hover {
-      background: #1976d2;
+      background: #508346;
     }
     .botaoEliminar {
-      background: #e74c3c;
+      background: #b80a00;
     }
     .botaoEliminar:hover {
-      background: #c0392b;
+      background: #b80900e3;
     }
 
 
@@ -135,14 +144,14 @@
     }
     .form-boxupload h2 {
       margin-bottom: 15px;
-      color: #333;
+      color: #0d1b2a;
       font-size: 20px;
     }
     .form-boxupload label {
       display: block;
       margin-top: 10px;
       font-weight: 500;
-      color: #333;
+      color: #0d1b2a;
       font-size: 14px;
     }
     .form-boxupload input[type="text"],
@@ -158,7 +167,7 @@
       position: absolute;
       top: 12px; right: 12px;
       font-size: 24px;
-      color: #555;
+      color: #1b263b;
       cursor: pointer;
       transition: color .2s;
     }
@@ -167,17 +176,17 @@
     }
     .botaoUpload {
       margin-top: 15px;
-      background: #4caf50;
+      background: #4b7842;
       color: #f2f8fc;
       border: none;
       padding: 10px 18px;
       font-size: 14px;
       border-radius: 4px;
       cursor: pointer;
-      transition: background .2s;
+      
     }
     .botaoUpload:hover {
-      background: #45a049;
+      background: #508346;
     }
 
     @media (max-width: 600px) {
@@ -227,21 +236,21 @@
     }
     .form-boxeditar h2 {
       margin-bottom: 15px;
-      color: #333;
+      color: #0d1b2a;
       font-size: 20px;
     }
     .form-boxeditar label {
       display: block;
       margin-top: 10px;
       font-weight: 500;
-      color: #333;
+      color: #0d1b2a;
       font-size: 14px;
     }
     .form-boxeditar input[type="text"]{
       width: 100%;
       padding: 10px 12px;
       margin-top: 5px;
-      border: 1px solid #2d313451;
+      border: 1px solid #0d1b0d;
       border-radius: 4px;
       font-size: 14px;
     }
@@ -249,34 +258,51 @@
       position: absolute;
       top: 12px; right: 12px;
       font-size: 24px;
-      color: #555;
+      color: #1b263b;
       cursor: pointer;
       transition: color .2s;
     }
     .icon-close-editar:hover {
-      color: #000;
+      color: #0d1b2a;
     }
     .botaoGuardar {
       margin-top: 15px;
-      background: #4caf50;
+      background: #4b7842;
       color: #f2f8fc;
       border: none;
       padding: 10px 18px;
       font-size: 14px;
       border-radius: 4px;
       cursor: pointer;
-      transition: background .2s;
     }
     .botaoGuardar:hover {
-      background: #45a049;
+      background: #508346;
     }
-
+    .botaoVoltar {
+      background-color: #415a77;
+      color: #f2f8fc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      outline: none;
+      border: none;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family:  'Nunito', sans-serif;
+    }
+    .button:hover{
+      background-color: #415a77b7;
+    }
 
   </style>
 </head>
 <body>
 
   <header class="header">
+    <button class="botaoVoltar" onclick="window.location.href='/index.html';"><span class="material-symbols-outlined">arrow_back_ios</span>Voltar</button>
     <h1>Gestão de vídeos</h1>
     <button class="adicionar-video-botao" onclick="mostrarPopup()">
       Adicionar Vídeo
