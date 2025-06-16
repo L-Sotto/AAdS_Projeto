@@ -5,7 +5,7 @@
     <title>UALFlix</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=search"/>
+     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
@@ -18,10 +18,11 @@
 
 
         body{
-            display: flex;
+             /* display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            min-height: 100vh; */
+            margin-top: 120px;
             background-size: cover;
             background-attachment: fixed;
             background-color: #f2f8fc;
@@ -37,6 +38,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 99;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .logo{
             height: 50px;
@@ -105,23 +107,48 @@
         }
 
         .pesquisaForm {
-            flex: 1;
+             /* flex: 1;
             display: flex;
             justify-content: center;
-            position: relative;
-            padding-right: 275px;
+            position: relative; */
+            /* padding-right: 100px; */
+            position: absolute;
+            left: 50%;  
+            transform: translateX(-50%);
         }
-
+        .botaoAdmin{
+            background: #164599;
+            color: #f2f8fc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            outline: none;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family:  'Nunito', sans-serif;
+        }
+        .botaoAdmin:hover{
+            background: #164699e0;
+        }
         
         .videos-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        padding: 1rem;
+            display: grid;
+            /* flex-wrap: wrap; */
+            grid-template-columns: repeat(4, minmax(300px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            max-width: calc(4 * 300px + 3 * 1rem + 2 * 1rem);
+            justify-content: center;
+            margin: 0 auto;
+            /* grid-auto-rows: 300px; */
         }
         .video-card {
         flex: 1 1 300px;
-        border: 1px solid #ccc;
+        border: 1px solid #f2f8fc;
         padding: 0.5rem;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -132,7 +159,7 @@
         }
         .video-card p {
         margin-bottom: 0.5rem;
-        color: #555;
+        color: #333;
         }
         
 
@@ -143,25 +170,38 @@
         padding: 1rem;
         }*/
         .video-card {
-        background: #fff;
+        background: #f2f8fc;
         border-radius: 0.5rem;
         padding: 0.75rem;
         cursor: pointer;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        min-height: 200px;
         }
         .video-modal {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        display: flex; align-items: center; justify-content: center;
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
         z-index: 100;
         }
-        .video-modal.hidden { display: none; }
+        .video-modal.hidden { 
+            display: none; 
+        }
         .modal-backdrop {
-        position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
         background: rgba(0,0,0,0.6);
         }
         .modal-content {
         position: relative;
-        background: #fff;
+        background: #f2f8fc;
         padding: 1rem;
         border-radius: 0.5rem;
         max-width: 90%;
@@ -197,7 +237,7 @@
                 <input class="pesquisaInput" type="text" placeholder="Pesquisar">
             </div>
         </form>
-        <button onclick="window.location.href='/admin.html';">Administrador</button>
+        <button class="botaoAdmin" onclick="window.location.href='/admin.html';">Administrador<span class="material-symbols-outlined">arrow_forward_ios</span></button>
     </header>
 
     <main id="videosContainer" class="videos-container"></main>
