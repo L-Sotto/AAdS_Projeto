@@ -223,7 +223,7 @@
     </style>
 
 </head>
-<!-- <span class="material-symbols-outlined">search</span> -->
+
 <body>
     
     <header>
@@ -249,99 +249,7 @@
     </div>
     </div>
 
-    <!-- <script>
- 
-        document.addEventListener('DOMContentLoaded', obterVideos);
-
-        function obterVideos() {
-        
-        fetch('http://127.0.0.1:7000/api/videos', {
-            method: 'GET'
-        })
-        .then(res => {
-            if (!res.ok) {
-            throw new Error('Falha ao obter lista de vídeos: ' + res.status);
-            }
-            return res.json();
-        })
-        .then(videos => {
-            const container = document.getElementById('videosContainer');
-            container.innerHTML = ''; // limpa antes de preencher
-
-            videos.forEach(video => {
-            // Cria card
-            const card = document.createElement('div');
-            card.className = 'video-card';
-
-            const titulo = document.createElement('h2');
-            titulo.textContent = video.titulo;
-
-            const descricao = document.createElement('p');
-            descricao.textContent = video.descricao;
-
-            const vid = document.createElement('video');
-            vid.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
-            vid.controls = true;
-            vid.width = 320;
-
-            card.append(titulo, descricao, vid);
-            container.appendChild(card);
-            });
-        })
-        .catch(err => {
-            console.error('Erro ao carregar vídeos:', err);
-            // Opcional: exibires uma mensagem na página
-            const container = document.getElementById('videosContainer');
-            container.innerHTML = `<p style="color:red;">${err.message}</p>`;
-        });
-        }
-
-        function popularCards(){
-            const vid = document.createElement('video');
-            vid.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
-            vid.controls = true;
-            vid.width = 320;
-
-            card.append(titulo, descricao, vid);
-            // em vez do <video> no card, só um placeholder:
-            const thumb = document.createElement('div');
-            thumb.className = 'video-thumb';
-            thumb.textContent = '►';              // ou uma <img src="thumbs/…">
-            thumb.style.fontSize = '3rem';        // só para exemplo
-            thumb.style.textAlign = 'center';
-
-            card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
-            card.append(titulo, descricao, thumb);
-            const modal    = document.getElementById('videoModal');
-            const modalVid = document.getElementById('modalVideo');
-            const closeBtn = document.getElementById('closeModal');
-
-            // 1) Ao clicar num card…
-            document.getElementById('videosContainer')
-            .addEventListener('click', e => {
-                const card = e.target.closest('.video-card');
-                if (!card) return;
-                const src = card.dataset.src;
-                modalVid.src = src;
-                modal.classList.remove('hidden');
-                modalVid.play();
-            });
-
-            // 2) Fechar
-            closeBtn.addEventListener('click', () => {
-            modalVid.pause();
-            modalVid.currentTime = 0;
-            modalVid.src = '';
-            modal.classList.add('hidden');
-            });
-            modal.querySelector('.modal-backdrop')
-                .addEventListener('click', () => closeBtn.click());
-
-        }
-
-    </script>  -->
-
-    <!-- … mantém o teu HTML e CSS inalterados, só muda o script … -->
+    
 <script>
 document.addEventListener('DOMContentLoaded', obterVideos);
 
@@ -362,7 +270,7 @@ function obterVideos() {
       videos.forEach(video => {
         const card = document.createElement('div');
         card.className = 'video-card';
-        // guardamos o URL real no dataset
+        
         card.dataset.src = `http://127.0.0.1:7000/api/videos/${video.id}`;
 
         const titulo = document.createElement('h2');
@@ -371,7 +279,7 @@ function obterVideos() {
         const descricao = document.createElement('p');
         descricao.textContent = video.descricao;
 
-        // placeholder (pode ser um thumbnail ou só um ícone ►)
+        
         const thumb = document.createElement('div');
         thumb.className = 'video-thumb';
         thumb.textContent = '►';  
@@ -389,7 +297,7 @@ function obterVideos() {
     });
 }
 
-// quando clicar num card, abre o modal e carrega só esse vídeo
+
 document.getElementById('videosContainer').addEventListener('click', e => {
   const card = e.target.closest('.video-card');
   if (!card) return;
@@ -403,7 +311,7 @@ document.getElementById('videosContainer').addEventListener('click', e => {
   modal.classList.remove('hidden');
   modalVid.play();
 
-  // fechar modal
+ 
   function fechar() {
     modalVid.pause();
     modalVid.currentTime = 0;

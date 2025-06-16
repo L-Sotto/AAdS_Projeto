@@ -104,7 +104,7 @@ def obter_videos():
         for doc in docs:
             file_id = doc.get('file_id')
             duracao = None
-            # Tenta obter duração a partir do tamanho do arquivo no GridFS
+            
             try:
                 # grid_out = fs.get(ObjectId(file_id))
                 duracao = doc.get('duracao')
@@ -121,7 +121,7 @@ def obter_videos():
         return jsonify(videos), 200
 
     except Exception as e:
-        # Se der qualquer exceção aqui, ela aparecerá com stack trace no console
+        
         app.logger.error(f"Erro ao obter vídeos: {e}")
         return jsonify({'error': 'Erro ao listar vídeos.'}), 500
 
